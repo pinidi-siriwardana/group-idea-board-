@@ -11,11 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const ideasList = document.getElementById('ideasList');
     const totalIdeasSpan = document.getElementById('totalIdeas');
     const clearAllBtn = document.getElementById('clearAllBtn');
+    const filterInput = document.getElementById('filterInput');
 
     // State
     let members = JSON.parse(localStorage.getItem('ib_members')) || [];
     let ideas = JSON.parse(localStorage.getItem('ib_ideas')) || [];
     let isDarkMode = localStorage.getItem('ib_theme') === 'dark';
+    let filterText = '';
 
     // Initialization
     const init = () => {
@@ -97,18 +99,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // Idea Management
     const renderIdeas = () => {
         ideasList.innerHTML = '';
-        if (ideas.length === 0) {
-            ideasList.innerHTML = '<p style="text-align: center; opacity: 0.5; padding: 2rem;">No ideas yet. Be the first to share!</p>';
+        
+        const filteredIdeas = ideas.filter(idea => 
+            idea.text.toLowerCase().includes(filterText.toLowerCase()) || 
+            idea.author.toLowerCase().includes(filterText.toLowerCase())
+        );
+
+        if (filteredIdeas.length === 0) {
+            const message = filterText 
+                ? `No ideas found matching "${filterText}"`
+                : 'No ideas yet. Be the first to share!';
+            ideasList.innerHTML = `<p style="text-align: center; opacity: 0.5; padding: 2rem;">${message}</p>`;
             return;
         }
 
-        ideas.slice().reverse().forEach((idea) => {
+        filteredIdeas.slice().reverse().forEach((idea) => {
             const div = document.createElement('div');
             div.className = 'idea-item';
             div.innerHTML = `
-                <p class="idea-text">${idea.text}</p>
-                <p class="idea-meta">Shared by <span class="author-name">${idea.author}</span> on ${idea.date}</p>
+                <div class="idea-content">
+                    <p class="idea-text">${idea.text}</p>
+                    <p class="idea-meta">Shared by <span class="author-name">${idea.author}</span> on ${idea.date}</p>
+                </div>
+                <button class="delete-idea-btn" title="Delete Idea">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                </button>
             `;
+
+            const deleteBtn = div.querySelector('.delete-idea-btn');
+            deleteBtn.onclick = () => deleteIdea(idea.id);
+
             ideasList.appendChild(div);
         });
     };
@@ -141,6 +161,15 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStats();
     };
 
+    const deleteIdea = (id) => {
+        if (confirm('Are you sure you want to delete this idea?')) {
+            ideas = ideas.filter(idea => idea.id !== id);
+            localStorage.setItem('ib_ideas', JSON.stringify(ideas));
+            renderIdeas();
+            updateStats();
+        }
+    };
+
     const updateStats = () => {
         totalIdeasSpan.textContent = ideas.length;
     };
@@ -155,8 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Event Listeners
     submitIdeaBtn.addEventListener('click', submitIdea);
     clearAllBtn.addEventListener('click', clearAllIdeas);
+    
+    filterInput.addEventListener('input', (e) => {
+        filterText = e.target.value;
+        renderIdeas();
+    });
 
     // Run app
     init();
