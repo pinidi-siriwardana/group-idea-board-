@@ -3,81 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IdeaBoard Pro | Collective Innovation</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Group Idea Board</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="mesh-bg">
-        <div class="mesh-ball ball-1"></div>
-        <div class="mesh-ball ball-2"></div>
-        <div class="mesh-ball ball-3"></div>
-    </div>
-    
-    <div class="app-container">
-        <header class="app-header">
-            <div class="logo-area">
-                <span class="logo-icon">💡</span>
-                <h1>Group Idea Board</h1>
-            </div>
-            <p class="tagline">Where brilliance meets collaboration.</p>
-        </header>
+<body class="light-mode">
+    <nav class="navbar">
+        <div class="logo">IdeaBoard</div>
+        <div class="mode-toggle">
+            <button id="themeToggle" class="toggle-btn">
+                <span class="icon">🌙</span>
+            </button>
+        </div>
+    </nav>
 
-        <main class="app-main">
-            <div class="control-panel">
-                <div class="input-container">
-                    <label for="idea-input">Describe your idea</label>
-                    <textarea id="idea-input" rows="1" placeholder="Type something revolutionary..." autocomplete="off"></textarea>
-                </div>
+    <header class="header">
+        <h1>Collaborative Brainstorming</h1>
+        <p>Share your vision with the team</p>
+    </header>
 
-                <div class="actions-row">
-                    <div class="select-wrapper">
-                        <label for="person-select">Suggested by</label>
-                        <select id="person-select">
-                            <option value="" disabled selected>Select a person</option>
-                            <option value="Alex">Alex Thompson</option>
-                            <option value="Jordan">Jordan Smith</option>
-                            <option value="Taylor">Taylor Reed</option>
-                            <option value="Riley">Riley Chen</option>
-                            <option value="Sam">Sam Wilson</option>
-                        </select>
-                    </div>
-                    <div class="btn-group">
-                        <button id="add-idea-btn" class="btn btn-primary">
-                            <span>Add Idea</span>
-                        </button>
-                        <button id="clear-input-btn" class="btn btn-outline">
-                            <span>Clear</span>
-                        </button>
-                    </div>
+    <main class="container">
+        <div class="grid">
+            <!-- Member Management Section -->
+            <section class="card">
+                <h2>Team Members</h2>
+                <div class="input-group">
+                    <input type="text" id="newMemberInput" placeholder="Enter new member name...">
+                    <button id="addMemberBtn">Add Member</button>
                 </div>
-            </div>
-
-            <section class="board-section">
-                <div class="section-header">
-                    <h2>Recent Submissions</h2>
-                    <div class="counter-badge">
-                        <span id="total-count">0</span> Submissions
-                    </div>
-                </div>
-                
-                <div id="ideas-viewport" class="ideas-grid">
-                    <ul id="idea-list"></ul>
-                    <div id="empty-state" class="empty-placeholder">
-                        <div class="empty-icon">📂</div>
-                        <h3>The board is empty</h3>
-                        <p>Share an idea to spark the conversation.</p>
-                    </div>
+                <div class="member-list-container">
+                    <ul id="memberList">
+                        <!-- Members will appear here -->
+                    </ul>
                 </div>
             </section>
-        </main>
 
-        <footer class="app-footer">
-            <p>&copy; 2026 IdeaBoard Pro &bull; Built for Modern Teams</p>
-        </footer>
-    </div>
+            <!-- Idea Submission Section -->
+            <section class="card">
+                <h2>Submit Idea</h2>
+                <div class="input-group">
+                    <label for="memberSelect">Select Member</label>
+                    <select id="memberSelect">
+                        <option value="" disabled selected>Choose a member...</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="ideaInput">Your Idea</label>
+                    <textarea id="ideaInput" placeholder="Describe your idea here..."></textarea>
+                </div>
+                <button id="submitIdeaBtn" class="primary-btn">Submit Idea</button>
+            </section>
+        </div>
+
+        <!-- Idea Feed Section -->
+        <section class="idea-feed card">
+            <div class="feed-header">
+                <div class="header-main">
+                    <h2>Group Ideas</h2>
+                    <div class="stats">
+                        Total Ideas: <span id="totalIdeas">0</span>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <input type="text" id="filterInput" placeholder="Filter by member or keyword...">
+                </div>
+            </div>
+            <div id="ideasList" class="ideas-list">
+                <!-- Ideas will appear here -->
+            </div>
+            <div class="feed-actions">
+                <button id="clearAllBtn" class="danger-btn">Clear All Ideas</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Group Idea Board. All rights reserved.</p>
+    </footer>
+
     <script src="script.js"></script>
 </body>
 </html>
