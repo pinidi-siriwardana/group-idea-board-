@@ -3,310 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>University Orientation | Group Idea Board</title>
-    <!-- Google Fonts for a clean, professional look -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <title>Group Idea Board - Zaid's Version</title>
+    <!-- Modern font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS VARIABLES: Modern & Academic Colors --- */
+        /* CSS Variables for easy customization and consistency */
         :root {
-            --primary: #4f46e5;       /* Modern Indigo */
-            --secondary: #0ea5e9;     /* Sky Blue */
-            --accent: #f59e0b;        /* Amber for highlights */
-            --background: #f8fafc;    /* Clean off-white */
+            --primary-blue: #2c3e50; /* Deep blue for header */
+            --accent-blue: #3498db;  /* Brighter blue for buttons */
+            --background-gray: #f4f7f6;
             --card-bg: #ffffff;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --radius: 12px;
+            --text-color: #333333;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- GLOBAL STYLES --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Basic Page Setup */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--background);
-            color: var(--text-dark);
-            line-height: 1.6;
-            padding-bottom: 50px;
-        }
-
-        /* --- HEADER SECTION --- */
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
-            margin-bottom: 40px;
-        }
-
-        header h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            letter-spacing: -1px;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0.9;
-        }
-
-        /* --- MAIN CONTAINER --- */
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* --- SECTION TITLES --- */
-        .section-title {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background-gray);
+            color: var(--text-color);
+            margin: 0;
             display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 30px;
-            font-size: 1.5rem;
-            color: var(--primary);
-        }
-
-        /* --- CARDS SECTION (Grid Layout) --- */
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 60px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-top: 5px solid var(--primary);
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-        }
-
-        .card i {
-            font-size: 2rem;
-            color: var(--secondary);
-            margin-bottom: 15px;
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-            font-size: 1.25rem;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* --- LIST SECTION (Vertical Layout) --- */
-        .list-section {
-            background: white;
-            padding: 40px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-
-        .topic-list {
-            list-style: none;
-        }
-
-        .topic-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .topic-item:last-child {
-            border-bottom: none;
-        }
-
-        .topic-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .topic-icon {
-            width: 40px;
-            height: 40px;
-            background: #f1f5f9;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
             justify-content: center;
-            color: var(--primary);
+            align-items: center;
+            min-height: 100vh;
         }
 
-        /* --- BUTTONS --- */
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: var(--primary);
+        /* Card Container Styling */
+        .card {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden; /* Ensures header corners are rounded */
+            margin: 20px;
+        }
+
+        /* Academic Blue Header Bar */
+        .card-header {
+            background-color: var(--primary-blue);
             color: white;
-            text-decoration: none;
-            border-radius: 50px;
+            padding: 20px;
+            text-align: center;
             font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content Area */
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Form Grouping for spacing */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
             font-size: 0.9rem;
+            color: #555;
         }
 
-        .btn:hover {
-            background: var(--text-dark);
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        /* Input and Select Styling */
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            transition: border-color 0.2s;
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-            margin-left: 10px;
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
         }
 
-        .btn-outline:hover {
-            background: var(--primary);
+        /* Add Idea Button Styling */
+        #add-idea-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-blue);
             color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
         }
 
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 768px) {
-            header {
-                padding: 60px 20px;
-                clip-path: none;
-            }
-            header h1 {
-                font-size: 2rem;
-            }
-            .grid-container {
-                grid-template-columns: 1fr;
-            }
-            .topic-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
+        /* Button Hover and Click Effects */
+        #add-idea-btn:hover {
+            background-color: #2980b9;
+        }
+
+        #add-idea-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* List Area Styling */
+        .idea-list-container {
+            margin-top: 30px;
+            border-top: 2px solid #eee;
+            padding-top: 20px;
+        }
+
+        .idea-list-container h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        /* The actual list of ideas */
+        #idea-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #idea-list li {
+            background-color: #f9f9f9;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        /* Emphasizing the name in the idea */
+        .suggested-by {
+            font-weight: 600;
+            color: var(--accent-blue);
         }
     </style>
 </head>
 <body>
 
-    <!-- Header Section -->
-    <header>
-        <h1>Group Idea Board</h1>
-        <p>Welcome to the 2026 University Orientation. Collaborate, share ideas, and plan your academic journey together.</p>
-    </header>
-
-    <div class="container">
-        
-        <!-- Ideas Section (Card Layout) -->
-        <div class="section-title">
-            <i class="fas fa-lightbulb"></i>
-            <h2>Core Learning Pillars</h2>
+    <!-- Main Card Container -->
+    <div class="card">
+        <!-- Header Bar -->
+        <div class="card-header">
+            Group Idea Board
         </div>
 
-        <div class="grid-container">
-            <!-- Card 1 -->
-            <div class="card">
-                <i class="fas fa-code"></i>
-                <h3>Programming</h3>
-                <p>Master the foundations of Python, Java, and C++. Build logic that powers the future of technology.</p>
+        <!-- Input Section -->
+        <div class="card-body">
+            
+            <!-- Name Selection Dropdown -->
+            <div class="form-group">
+                <label for="name-select">Team Member</label>
+                <select id="name-select">
+                    <option value="" disabled selected>Select your name...</option>
+                    <option value="Alice">Alice</option>
+                    <option value="Bob">Bob</option>
+                    <option value="Charlie">Charlie</option>
+                    <option value="Dana">Dana</option>
+                    <option value="Zaid">Zaid</option>
+                </select>
             </div>
-            <!-- Card 2 -->
-            <div class="card">
-                <i class="fas fa-robot"></i>
-                <h3>AI & Data Science</h3>
-                <p>Explore machine learning, neural networks, and big data to solve complex real-world problems.</p>
+
+            <!-- Idea Description Input -->
+            <div class="form-group">
+                <label for="idea-input">What's your idea?</label>
+                <input type="text" id="idea-input" placeholder="Enter your idea here...">
             </div>
-            <!-- Card 3 -->
-            <div class="card">
-                <i class="fas fa-laptop-code"></i>
-                <h3>Web Engineering</h3>
-                <p>Design beautiful user interfaces and scalable backends using modern frameworks like React and Node.js.</p>
+
+            <!-- Action Button -->
+            <button id="add-idea-btn">Add Idea</button>
+
+            <!-- List of Ideas -->
+            <div class="idea-list-container">
+                <h3>Submitted Ideas</h3>
+                <ul id="idea-list">
+                    <!-- New ideas will be added here by JavaScript -->
+                </ul>
             </div>
-        </div>
 
-        <!-- Topics Section (List Layout) -->
-        <div class="section-title">
-            <i class="fas fa-tasks"></i>
-            <h2>Recommended Learning Path</h2>
         </div>
-
-        <div class="list-section">
-            <ul class="topic-list">
-                <!-- List Item 1 -->
-                <li class="topic-item">
-                    <div class="topic-info">
-                        <div class="topic-icon"><i class="fas fa-terminal"></i></div>
-                        <div>
-                            <strong>Introduction to CLI</strong>
-                            <p style="font-size: 0.85rem; color: var(--text-muted);">Learn how to navigate the terminal efficiently.</p>
-                        </div>
-                    </div>
-                    <button class="btn" onclick="showAlert('CLI Essentials')">Enroll Now</button>
-                </li>
-                <!-- List Item 2 -->
-                <li class="topic-item">
-                    <div class="topic-info">
-                        <div class="topic-icon"><i class="fab fa-git-alt"></i></div>
-                        <div>
-                            <strong>Version Control with Git</strong>
-                            <p style="font-size: 0.85rem; color: var(--text-muted);">Master collaboration and code management.</p>
-                        </div>
-                    </div>
-                    <button class="btn" onclick="showAlert('Git Mastery')">Enroll Now</button>
-                </li>
-                <!-- List Item 3 -->
-                <li class="topic-item">
-                    <div class="topic-info">
-                        <div class="topic-icon"><i class="fas fa-database"></i></div>
-                        <div>
-                            <strong>Database Fundamentals</strong>
-                            <p style="font-size: 0.85rem; color: var(--text-muted);">Understanding SQL and NoSQL architectures.</p>
-                        </div>
-                    </div>
-                    <div>
-                        <button class="btn" onclick="showAlert('Database Course')">Enroll Now</button>
-                        <button class="btn btn-outline" onclick="location.href='#'">Details</button>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
     </div>
 
-    <!-- JavaScript for Interactions -->
     <script>
-        // Simple function to show an alert when a button is clicked
-        function showAlert(courseName) {
-            alert("Success! You have expressed interest in: " + courseName + ".\nOur team will contact you soon with more details.");
+        // Select elements from the DOM
+        const addButton = document.getElementById('add-idea-btn');
+        const ideaInput = document.getElementById('idea-input');
+        const nameSelect = document.getElementById('name-select');
+        const ideaList = document.getElementById('idea-list');
+
+        /**
+         * Function to add an idea to the list
+         */
+        function addIdea() {
+            // 1. Get the current values from the inputs
+            const ideaText = ideaInput.value.trim();
+            const selectedName = nameSelect.value;
+
+            // 2. Validation: Prevent empty ideas or missing names
+            if (ideaText === "") {
+                alert("Please enter an idea description.");
+                return;
+            }
+            if (selectedName === "") {
+                alert("Please select your name from the dropdown.");
+                return;
+            }
+
+            // 3. Create a new list item (li) element
+            const listItem = document.createElement('li');
+
+            // 4. Set the content of the list item using the required format:
+            // "Idea description – suggested by [name]"
+            listItem.innerHTML = `${ideaText} – suggested by <span class="suggested-by">${selectedName}</span>`;
+
+            // 5. Add the new item to our list
+            ideaList.appendChild(listItem);
+
+            // 6. Clear the idea input for the next entry
+            ideaInput.value = "";
+            
+            // Optional: Scroll to the bottom of the list to see the new idea
+            listItem.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Console log to show the page is ready (Beginner friendly)
-        console.log("Welcome to the Orientation Idea Board!");
-    </script>
+        // Add an event listener to the button to trigger the function when clicked
+        addButton.addEventListener('click', addIdea);
 
+        // Allow pressing "Enter" in the input field to also add the idea
+        ideaInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                addIdea();
+            }
+        });
+    </script>
 </body>
 </html>

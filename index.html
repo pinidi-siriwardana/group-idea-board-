@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Idea Board</title>
+    <!-- Modern font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for easy customization and consistency */
+        :root {
+            --primary-blue: #2c3e50; /* Deep blue for header */
+            --accent-blue: #3498db;  /* Brighter blue for buttons */
+            --background-gray: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-radius: 8px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Basic Page Setup */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--background-gray);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Card Container Styling */
+        .card {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden; /* Ensures header corners are rounded */
+            margin: 20px;
+        }
+
+        /* Academic Blue Header Bar */
+        .card-header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Content Area */
+        .card-body {
+            padding: 25px;
+        }
+
+        /* Form Grouping for spacing */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* Input and Select Styling */
+        select, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            box-sizing: border-box; /* Ensures padding doesn't affect width */
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        /* Add Idea Button Styling */
+        #add-idea-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        /* Button Hover and Click Effects */
+        #add-idea-btn:hover {
+            background-color: #2980b9;
+        }
+
+        #add-idea-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* List Area Styling */
+        .idea-list-container {
+            margin-top: 30px;
+            border-top: 2px solid #eee;
+            padding-top: 20px;
+        }
+
+        .idea-list-container h3 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary-blue);
+        }
+
+        /* The actual list of ideas */
+        #idea-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #idea-list li {
+            background-color: #f9f9f9;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        /* Emphasizing the name in the idea */
+        .suggested-by {
+            font-weight: 600;
+            color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Card Container -->
+    <div class="card">
+        <!-- Header Bar -->
+        <div class="card-header">
+            Group Idea Board
+        </div>
+
+        <!-- Input Section -->
+        <div class="card-body">
+            
+            <!-- Name Selection Dropdown -->
+            <div class="form-group">
+                <label for="name-select">Team Member</label>
+                <select id="name-select">
+                    <option value="" disabled selected>Select your name...</option>
+                    <option value="Alice">Alice</option>
+                    <option value="Bob">Bob</option>
+                    <option value="Charlie">Charlie</option>
+                    <option value="Dana">Dana</option>
+                    <option value="Zaid">Zaid</option>
+                </select>
+            </div>
+
+            <!-- Idea Description Input -->
+            <div class="form-group">
+                <label for="idea-input">What's your idea?</label>
+                <input type="text" id="idea-input" placeholder="Enter your idea here...">
+            </div>
+
+            <!-- Action Button -->
+            <button id="add-idea-btn">Add Idea</button>
+
+            <!-- List of Ideas -->
+            <div class="idea-list-container">
+                <h3>Submitted Ideas</h3>
+                <ul id="idea-list">
+                    <!-- New ideas will be added here by JavaScript -->
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Select elements from the DOM
+        const addButton = document.getElementById('add-idea-btn');
+        const ideaInput = document.getElementById('idea-input');
+        const nameSelect = document.getElementById('name-select');
+        const ideaList = document.getElementById('idea-list');
+
+        /**
+         * Function to add an idea to the list
+         */
+        function addIdea() {
+            // 1. Get the current values from the inputs
+            const ideaText = ideaInput.value.trim();
+            const selectedName = nameSelect.value;
+
+            // 2. Validation: Prevent empty ideas or missing names
+            if (ideaText === "") {
+                alert("Please enter an idea description.");
+                return;
+            }
+            if (selectedName === "") {
+                alert("Please select your name from the dropdown.");
+                return;
+            }
+
+            // 3. Create a new list item (li) element
+            const listItem = document.createElement('li');
+
+            // 4. Set the content of the list item using the required format:
+            // "Idea description – suggested by [name]"
+            listItem.innerHTML = `${ideaText} – suggested by <span class="suggested-by">${selectedName}</span>`;
+
+            // 5. Add the new item to our list
+            ideaList.appendChild(listItem);
+
+            // 6. Clear the idea input for the next entry
+            ideaInput.value = "";
+            
+            // Optional: Scroll to the bottom of the list to see the new idea
+            listItem.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Add an event listener to the button to trigger the function when clicked
+        addButton.addEventListener('click', addIdea);
+
+        // Allow pressing "Enter" in the input field to also add the idea
+        ideaInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                addIdea();
+            }
+        });
+    </script>
+</body>
+</html>
