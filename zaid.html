@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Orientation | Group Idea Board</title>
+    <!-- Google Fonts for a clean, professional look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- CSS VARIABLES: Modern & Academic Colors --- */
+        :root {
+            --primary: #4f46e5;       /* Modern Indigo */
+            --secondary: #0ea5e9;     /* Sky Blue */
+            --accent: #f59e0b;        /* Amber for highlights */
+            --background: #f8fafc;    /* Clean off-white */
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+        }
+
+        /* --- GLOBAL STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        /* --- HEADER SECTION --- */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0% 100%);
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* --- MAIN CONTAINER --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- SECTION TITLES --- */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        /* --- CARDS SECTION (Grid Layout) --- */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-top: 5px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        .card i {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+            font-size: 1.25rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- LIST SECTION (Vertical Layout) --- */
+        .list-section {
+            background: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .topic-list {
+            list-style: none;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .topic-item:last-child {
+            border-bottom: none;
+        }
+
+        .topic-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .topic-icon {
+            width: 40px;
+            height: 40px;
+            background: #f1f5f9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        /* --- BUTTONS --- */
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: var(--text-dark);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            margin-left: 10px;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 768px) {
+            header {
+                padding: 60px 20px;
+                clip-path: none;
+            }
+            header h1 {
+                font-size: 2rem;
+            }
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .topic-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>Group Idea Board</h1>
+        <p>Welcome to the 2026 University Orientation. Collaborate, share ideas, and plan your academic journey together.</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Ideas Section (Card Layout) -->
+        <div class="section-title">
+            <i class="fas fa-lightbulb"></i>
+            <h2>Core Learning Pillars</h2>
+        </div>
+
+        <div class="grid-container">
+            <!-- Card 1 -->
+            <div class="card">
+                <i class="fas fa-code"></i>
+                <h3>Programming</h3>
+                <p>Master the foundations of Python, Java, and C++. Build logic that powers the future of technology.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="card">
+                <i class="fas fa-robot"></i>
+                <h3>AI & Data Science</h3>
+                <p>Explore machine learning, neural networks, and big data to solve complex real-world problems.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="card">
+                <i class="fas fa-laptop-code"></i>
+                <h3>Web Engineering</h3>
+                <p>Design beautiful user interfaces and scalable backends using modern frameworks like React and Node.js.</p>
+            </div>
+        </div>
+
+        <!-- Topics Section (List Layout) -->
+        <div class="section-title">
+            <i class="fas fa-tasks"></i>
+            <h2>Recommended Learning Path</h2>
+        </div>
+
+        <div class="list-section">
+            <ul class="topic-list">
+                <!-- List Item 1 -->
+                <li class="topic-item">
+                    <div class="topic-info">
+                        <div class="topic-icon"><i class="fas fa-terminal"></i></div>
+                        <div>
+                            <strong>Introduction to CLI</strong>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Learn how to navigate the terminal efficiently.</p>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="showAlert('CLI Essentials')">Enroll Now</button>
+                </li>
+                <!-- List Item 2 -->
+                <li class="topic-item">
+                    <div class="topic-info">
+                        <div class="topic-icon"><i class="fab fa-git-alt"></i></div>
+                        <div>
+                            <strong>Version Control with Git</strong>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Master collaboration and code management.</p>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="showAlert('Git Mastery')">Enroll Now</button>
+                </li>
+                <!-- List Item 3 -->
+                <li class="topic-item">
+                    <div class="topic-info">
+                        <div class="topic-icon"><i class="fas fa-database"></i></div>
+                        <div>
+                            <strong>Database Fundamentals</strong>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Understanding SQL and NoSQL architectures.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn" onclick="showAlert('Database Course')">Enroll Now</button>
+                        <button class="btn btn-outline" onclick="location.href='#'">Details</button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- JavaScript for Interactions -->
+    <script>
+        // Simple function to show an alert when a button is clicked
+        function showAlert(courseName) {
+            alert("Success! You have expressed interest in: " + courseName + ".\nOur team will contact you soon with more details.");
+        }
+
+        // Console log to show the page is ready (Beginner friendly)
+        console.log("Welcome to the Orientation Idea Board!");
+    </script>
+
+</body>
+</html>
