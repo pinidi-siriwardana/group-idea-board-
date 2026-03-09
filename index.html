@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Idea Board | Collaborate & Innovate</title>
+    <!-- Google Fonts for modern typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Root Variables for easy theme management --- */
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --accent: #10b981;
+            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        /* --- Base Styles --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+
+        /* --- Header Section --- */
+        header {
+            background: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-icon {
+            background: var(--primary);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* --- Main Layout Container --- */
+        .app-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 280px 1fr; /* Sidebar and Main Board */
+            gap: 2rem;
+            flex: 1;
+        }
+
+        /* --- Members Sidebar --- */
+        .members-sidebar {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            height: fit-content;
+        }
+
+        .members-sidebar h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .member-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .member-item:hover {
+            background: #f8fafc;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* --- Main Board Section --- */
+        .board-main {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Stats & Counter */
+        .stats-bar {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .stats-bar span {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        /* Idea Input Section */
+        .input-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: none;
+            height: 100px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-add {
+            background: var(--primary);
+            color: white;
+            flex: 2;
+        }
+
+        .btn-add:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-clear {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            flex: 1;
+        }
+
+        .btn-clear:hover {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        /* Idea List Display */
+        .idea-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .idea-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--primary);
+            position: relative;
+            animation: fadeIn 0.3s ease-out;
+            transition: transform 0.2s;
+        }
+
+        .idea-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .idea-text {
+            font-size: 1rem;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            word-wrap: break-word;
+        }
+
+        .idea-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .btn-delete {
+            color: #ef4444;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .btn-delete:hover {
+            background: #fef2f2;
+        }
+
+        /* --- Footer Section --- */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 900px) {
+            .app-container {
+                grid-template-columns: 1fr; /* Stack sidebar on top */
+            }
+            .members-sidebar {
+                order: -1; /* Keep members visible at top */
+            }
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 1rem; }
+            .idea-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="logo-icon">💡</div>
+        <h1>Group Idea Board</h1>
+    </header>
+
+    <div class="app-container">
+        <!-- Group Members Sidebar -->
+        <aside class="members-sidebar">
+            <h2>👥 Group Members</h2>
+            <ul class="member-list">
+                <li class="member-item"><div class="avatar">H</div> Helitha (Admin)</li>
+                <li class="member-item"><div class="avatar">A</div> Alex Johnson</li>
+                <li class="member-item"><div class="avatar">S</div> Sarah Miller</li>
+                <li class="member-item"><div class="avatar">J</div> James Chen</li>
+                <li class="member-item"><div class="avatar">M</div> Maria Garcia</li>
+            </ul>
+        </aside>
+
+        <!-- Idea Board Main Content -->
+        <main class="board-main">
+            <!-- Idea Counter -->
+            <div class="stats-bar">
+                <span>💡 Innovation Stream</span>
+                <span id="idea-counter">Total Ideas: 0</span>
+            </div>
+
+            <!-- Idea Input Section -->
+            <section class="input-card">
+                <div class="input-group">
+                    <textarea id="idea-input" placeholder="What's your brilliant idea? Share it with the group..."></textarea>
+                    <div class="button-group">
+                        <button id="add-btn" class="btn btn-add">
+                            Add Idea
+                        </button>
+                        <button id="clear-btn" class="btn btn-clear">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Idea List Section -->
+            <section id="idea-list" class="idea-grid">
+                <!-- Ideas will be dynamically inserted here -->
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer Section -->
+    <footer>
+        Group Idea Board &copy; 2026 &bull; Created with &hearts; for Collaboration
+    </footer>
+
+    <script>
+        /**
+         * Group Idea Board - Logic Script
+         */
+        
+        // Element Selectors
+        const ideaInput = document.getElementById('idea-input');
+        const addBtn = document.getElementById('add-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const ideaList = document.getElementById('idea-list');
+        const ideaCounter = document.getElementById('idea-counter');
+
+        // State Management
+        let ideas = JSON.parse(localStorage.getItem('group-board-ideas')) || [];
+
+        /**
+         * Updates the UI by rendering the idea list and updating the counter
+         */
+        function updateUI() {
+            // Clear current list
+            ideaList.innerHTML = '';
+            
+            // Render each idea as a card
+            ideas.forEach((idea, index) => {
+                const card = document.createElement('div');
+                card.className = 'idea-card';
+                card.innerHTML = `
+                    <p class="idea-text">${escapeHtml(idea.text)}</p>
+                    <div class="idea-footer">
+                        <span>Posted ${idea.time}</span>
+                        <button class="btn-delete" onclick="deleteIdea(${index})" title="Delete Idea">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </button>
+                    </div>
+                `;
+                ideaList.appendChild(card);
+            });
+
+            // Update Counter Text
+            ideaCounter.textContent = `Total Ideas: ${ideas.length}`;
+
+            // Save to LocalStorage for persistence
+            localStorage.setItem('group-board-ideas', JSON.stringify(ideas));
+        }
+
+        /**
+         * Adds a new idea to the board
+         */
+        function addIdea() {
+            const text = ideaInput.value.trim();
+            if (text === "") {
+                alert("Please type an idea before adding!");
+                return;
+            }
+
+            const newIdea = {
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                timestamp: Date.now()
+            };
+
+            ideas.unshift(newIdea); // Add new idea to top
+            ideaInput.value = ""; // Reset input
+            updateUI();
+        }
+
+        /**
+         * Deletes an idea by its index
+         */
+        function deleteIdea(index) {
+            if (confirm("Are you sure you want to remove this idea?")) {
+                ideas.splice(index, 1);
+                updateUI();
+            }
+        }
+
+        /**
+         * Helper function to prevent XSS by escaping HTML special characters
+         */
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // --- Event Listeners ---
+
+        addBtn.addEventListener('click', addIdea);
+
+        clearBtn.addEventListener('click', () => {
+            ideaInput.value = "";
+            ideaInput.focus();
+        });
+
+        // Add idea on Ctrl+Enter for better UX
+        ideaInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                addIdea();
+            }
+        });
+
+        // Initial UI Render on load
+        updateUI();
+    </script>
+</body>
+</html>
