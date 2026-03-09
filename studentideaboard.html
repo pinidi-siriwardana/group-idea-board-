@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Idea Board | Collaborate & Innovate</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- React & Babel CDNs -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.4s ease-out',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply transition-colors duration-500 font-sans;
+            }
+        }
+        @layer components {
+            .glass-card {
+                @apply backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 border border-white/20 dark:border-slate-700/30 shadow-2xl;
+            }
+            .btn-transition {
+                @apply transition-all duration-300 transform active:scale-95 hover:scale-105;
+            }
+            .input-style {
+                @apply w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/50 dark:bg-slate-800/50 focus:ring-2 focus:ring-indigo-500 outline-none transition-all;
+            }
+            .gradient-bg {
+                @apply bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            @apply bg-transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            @apply bg-slate-300 dark:bg-slate-700 rounded-full;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            @apply bg-slate-400 dark:bg-slate-600;
+        }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const App = () => {
+            const [darkMode, setDarkMode] = useState(() => {
+                const saved = localStorage.getItem('darkMode');
+                return saved ? JSON.parse(saved) : false;
+            });
+
+            const [members, setMembers] = useState(() => {
+                const saved = localStorage.getItem('members');
+                return saved ? JSON.parse(saved) : ['Alex', 'Jordan', 'Taylor'];
+            });
+
+            const [ideas, setIdeas] = useState(() => {
+                const saved = localStorage.getItem('ideas');
+                return saved ? JSON.parse(saved) : [];
+            });
+
+            const [newMemberName, setNewMemberName] = useState('');
+            const [ideaText, setIdeaText] = useState('');
+            const [selectedMember, setSelectedMember] = useState('');
+            const [showMemberManager, setShowMemberManager] = useState(false);
+
+            // Persistence
+            useEffect(() => {
+                localStorage.setItem('darkMode', JSON.stringify(darkMode));
+                if (darkMode) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            }, [darkMode]);
+
+            useEffect(() => {
+                localStorage.setItem('members', JSON.stringify(members));
+            }, [members]);
+
+            useEffect(() => {
+                localStorage.setItem('ideas', JSON.stringify(ideas));
+            }, [ideas]);
+
+            // Handlers
+            const addMember = (e) => {
+                e.preventDefault();
+                if (newMemberName.trim() && !members.includes(newMemberName.trim())) {
+                    setMembers([...members, newMemberName.trim()]);
+                    setNewMemberName('');
+                }
+            };
+
+            const removeMember = (name) => {
+                if (confirm(`Remove ${name} from the team?`)) {
+                    setMembers(members.filter(m => m !== name));
+                    if (selectedMember === name) setSelectedMember('');
+                }
+            };
+
+            const addIdea = (e) => {
+                e.preventDefault();
+                if (ideaText.trim() && selectedMember) {
+                    const newIdea = {
+                        id: Date.now(),
+                        text: ideaText.trim(),
+                        author: selectedMember,
+                        timestamp: new Date().toLocaleTimeString()
+                    };
+                    setIdeas([newIdea, ...ideas]);
+                    setIdeaText('');
+                    setSelectedMember('');
+                }
+            };
+
+            const clearAllIdeas = () => {
+                if (confirm('Are you sure you want to clear all ideas?')) {
+                    setIdeas([]);
+                }
+            };
+
+            useEffect(() => {
+                if (window.lucide) {
+                    window.lucide.createIcons();
+                }
+            }, [ideas, darkMode, members]);
+
+            const toggleDarkMode = () => setDarkMode(!darkMode);
+
+            return (
+                <div className="flex flex-col min-h-screen text-slate-900 dark:text-slate-100">
+                    {/* Header */}
+                    <header className="sticky top-0 z-50 glass-card border-b backdrop-blur-md">
+                        <nav className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+                            <div className="flex items-center gap-2 group cursor-pointer">
+                                <div className="p-2 bg-indigo-600 rounded-lg group-hover:rotate-12 transition-transform">
+                                    <i data-lucide="lightbulb" className="text-white w-6 h-6"></i>
+                                </div>
+                                <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                                    IdeaBoard Pro
+                                </span>
+                            </div>
+                            
+                            <button 
+                                onClick={toggleDarkMode}
+                                className="p-3 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors btn-transition"
+                                aria-label="Toggle Mode"
+                            >
+                                {darkMode ? (
+                                    <i data-lucide="sun" className="w-6 h-6 text-yellow-400"></i>
+                                ) : (
+                                    <i data-lucide="moon" className="w-6 h-6 text-slate-600"></i>
+                                )}
+                            </button>
+                        </nav>
+                    </header>
+
+                    {/* Main Content */}
+                    <main className="flex-grow max-w-4xl mx-auto w-full px-6 py-12">
+                        <div className="grid gap-8 md:grid-cols-1">
+                            
+                            {/* Input Section */}
+                            <section className="glass-card rounded-3xl p-8 space-y-8 animate-fade-in">
+                                <div className="space-y-6">
+                                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                                        <i data-lucide="plus-circle" className="text-indigo-500"></i>
+                                        Capture New Idea
+                                    </h2>
+                                    
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        {/* Member Addition */}
+                                        <div className="space-y-4">
+                                            <label className="block text-sm font-semibold text-slate-500 dark:text-slate-400">Add New Member</label>
+                                            <div className="flex gap-2">
+                                                <input 
+                                                    type="text" 
+                                                    value={newMemberName}
+                                                    onChange={(e) => setNewMemberName(e.target.value)}
+                                                    placeholder="Member name..."
+                                                    className="input-style"
+                                                    onKeyPress={(e) => e.key === 'Enter' && addMember(e)}
+                                                />
+                                                <button 
+                                                    onClick={addMember}
+                                                    className="bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-xl btn-transition shadow-lg shadow-indigo-500/20"
+                                                >
+                                                    <i data-lucide="user-plus" className="w-5 h-5"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Member Selection */}
+                                        <div className="space-y-4">
+                                            <label className="block text-sm font-semibold text-slate-500 dark:text-slate-400">Select Member</label>
+                                            <select 
+                                                value={selectedMember}
+                                                onChange={(e) => setSelectedMember(e.target.value)}
+                                                className="input-style cursor-pointer appearance-none"
+                                            >
+                                                <option value="" disabled>Who are you?</option>
+                                                {members.map(m => (
+                                                    <option key={m} value={m}>{m}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    {/* Idea Textarea */}
+                                    <div className="space-y-4">
+                                        <label className="block text-sm font-semibold text-slate-500 dark:text-slate-400">Your Brilliant Idea</label>
+                                        <textarea 
+                                            value={ideaText}
+                                            onChange={(e) => setIdeaText(e.target.value)}
+                                            placeholder="What's on your mind? Spark something new..."
+                                            rows="4"
+                                            className="input-style resize-none"
+                                        ></textarea>
+                                    </div>
+
+                                    <button 
+                                        onClick={addIdea}
+                                        disabled={!ideaText.trim() || !selectedMember}
+                                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 rounded-2xl btn-transition disabled:opacity-50 disabled:scale-100 shadow-xl shadow-indigo-500/30 flex items-center justify-center gap-2"
+                                    >
+                                        <i data-lucide="send" className="w-5 h-5"></i>
+                                        Post to Board
+                                    </button>
+                                </div>
+                            </section>
+
+                            {/* Dashboard / Stats Section */}
+                            <section className="flex flex-wrap items-center justify-between gap-4 animate-fade-in delay-100">
+                                <div className="glass-card rounded-2xl px-6 py-4 flex items-center gap-4">
+                                    <div className="bg-indigo-100 dark:bg-indigo-900/40 p-3 rounded-xl">
+                                        <i data-lucide="layers" className="text-indigo-600 dark:text-indigo-400 w-6 h-6"></i>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">Total Ideas</p>
+                                        <p className="text-2xl font-black text-indigo-600 dark:text-indigo-400">{ideas.length}</p>
+                                    </div>
+                                </div>
+
+                                <button 
+                                    onClick={clearAllIdeas}
+                                    className="px-6 py-4 rounded-2xl border border-red-200 dark:border-red-900/30 text-red-600 dark:text-red-400 font-semibold hover:bg-red-50 dark:hover:bg-red-900/20 btn-transition flex items-center gap-2"
+                                >
+                                    <i data-lucide="trash-2" className="w-5 h-5"></i>
+                                    Clear Board
+                                </button>
+                            </section>
+
+                            {/* Ideas List */}
+                            <section className="space-y-6">
+                                {ideas.length === 0 ? (
+                                    <div className="text-center py-20 animate-fade-in">
+                                        <div className="inline-block p-6 bg-slate-100 dark:bg-slate-800 rounded-full mb-4 opacity-50">
+                                            <i data-lucide="ghost" className="w-12 h-12"></i>
+                                        </div>
+                                        <h3 className="text-xl font-semibold text-slate-400">No ideas yet. Be the first to post!</h3>
+                                    </div>
+                                ) : (
+                                    <div className="grid gap-6">
+                                        {ideas.map((idea) => (
+                                            <div 
+                                                key={idea.id} 
+                                                className="glass-card rounded-3xl p-6 hover:border-indigo-500/50 transition-all group animate-slide-up"
+                                            >
+                                                <div className="flex justify-between items-start mb-4">
+                                                    <span className="italic opacity-70 text-sm font-medium text-indigo-600 dark:text-indigo-400">
+                                                        — {idea.author}
+                                                    </span>
+                                                    <span className="text-xs text-slate-400 font-medium">{idea.timestamp}</span>
+                                                </div>
+                                                <p className="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
+                                                    {idea.text}
+                                                </p>
+                                                <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button className="p-2 hover:text-indigo-600 transition-colors">
+                                                        <i data-lucide="heart" className="w-5 h-5"></i>
+                                                    </button>
+                                                    <button className="p-2 hover:text-indigo-600 transition-colors">
+                                                        <i data-lucide="share-2" className="w-5 h-5"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </section>
+                        </div>
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="py-12 px-6 border-t border-slate-200 dark:border-slate-800 mt-12 bg-white/30 dark:bg-slate-950/30">
+                        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+                            <div className="flex items-center gap-2">
+                                <div className="p-1 bg-slate-200 dark:bg-slate-800 rounded">
+                                    <i data-lucide="lightbulb" className="w-4 h-4"></i>
+                                </div>
+                                <span className="font-bold opacity-80">IdeaBoard Pro</span>
+                            </div>
+                            <p className="text-sm text-slate-500">© 2026 Creative Collaborations. All rights reserved.</p>
+                            <div className="flex gap-6">
+                                <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><i data-lucide="twitter" className="w-5 h-5"></i></a>
+                                <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><i data-lucide="github" className="w-5 h-5"></i></a>
+                                <a href="#" className="text-slate-400 hover:text-indigo-600 transition-colors"><i data-lucide="linkedin" className="w-5 h-5"></i></a>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+
+        // Initialize Lucide icons after React renders
+        // We'll use a small interval to ensure Lucide picks up the icons
+        setInterval(() => {
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
