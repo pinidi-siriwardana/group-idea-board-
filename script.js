@@ -1,107 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const ideaInput = document.getElementById('idea-input');
-    const personSelect = document.getElementById('person-select');
-    const addIdeaBtn = document.getElementById('add-idea-btn');
-    const clearInputBtn = document.getElementById('clear-input-btn');
-    const ideaList = document.getElementById('idea-list');
-    const totalCount = document.getElementById('total-count');
-    const emptyState = document.getElementById('empty-state');
+    const ideaInput = document.getElementById('ideaInput');
+    const personSelect = document.getElementById('personSelect');
+    const addBtn = document.getElementById('addBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const ideasList = document.getElementById('ideasList');
+    const totalCount = document.getElementById('totalCount');
 
     let ideas = [];
 
-    // Auto-expand textarea
-    ideaInput.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    });
-
-    const updateView = () => {
+    const updateStats = () => {
         totalCount.textContent = ideas.length;
-        
-        if (ideas.length === 0) {
-            emptyState.style.display = 'block';
-            ideaList.style.display = 'none';
-        } else {
-            emptyState.style.display = 'grid';
-            emptyState.style.display = 'grid';
-            emptyState.style.display = 'none';
-            ideaList.style.display = 'grid';
-        }
+    };
+
+    const renderIdeas = () => {
+        ideasList.innerHTML = '';
+        ideas.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.className = 'idea-item';
+            li.innerHTML = `
+                <span class="idea-text">${item.text}</span>
+                <span class="idea-author">— Suggested by ${item.author}</span>
+            `;
+            ideasList.appendChild(li);
+        });
+        updateStats();
     };
 
     const addIdea = () => {
         const text = ideaInput.value.trim();
         const author = personSelect.value;
 
-        if (!text) {
-            highlightError(ideaInput);
-            return;
-        }
-
-        if (!author) {
-            highlightError(personSelect);
+        if (text === '') {
+            ideaInput.focus();
             return;
         }
 
         const newIdea = {
-            id: Date.now(),
             text,
-            author
+            author,
+            timestamp: new Date()
         };
 
-        ideas.unshift(newIdea);
-        renderIdea(newIdea);
-        updateView();
-        clearFields();
-    };
-
-    const renderIdea = (idea) => {
-        const li = document.createElement('li');
-        li.className = 'idea-item';
-        li.innerHTML = `
-            <p class="idea-text">${idea.text}</p>
-            <div class="idea-footer">
-                <div class="author-tag">Suggested by ${idea.author}</div>
-            </div>
-        `;
-        
-        if (ideaList.firstChild) {
-            ideaList.insertBefore(li, ideaList.firstChild);
-        } else {
-            ideaList.appendChild(li);
-        }
-    };
-
-    const clearFields = () => {
+        ideas.unshift(newIdea); // Add to beginning of list
+        renderIdeas();
         ideaInput.value = '';
-        ideaInput.style.height = 'auto';
-        personSelect.selectedIndex = 0;
-        resetError(ideaInput);
-        resetError(personSelect);
+        ideaInput.focus();
     };
 
-    const highlightError = (el) => {
-        el.style.borderColor = 'rgba(239, 68, 68, 0.5)';
-        el.style.boxShadow = '0 0 0 4px rgba(239, 68, 68, 0.1)';
-        el.focus();
+    const clearInput = () => {
+        ideaInput.value = '';
+        ideaInput.focus();
     };
 
-    const resetError = (el) => {
-        el.style.borderColor = '';
-        el.style.boxShadow = '';
-    };
+    addBtn.addEventListener('click', addIdea);
 
-    addIdeaBtn.addEventListener('click', addIdea);
-    clearInputBtn.addEventListener('click', clearFields);
+    clearBtn.addEventListener('click', clearInput);
 
-    // Enter key (Shift+Enter for new line in textarea)
-    ideaInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
+    ideaInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
             addIdea();
         }
     });
-
-    // Initialize UI
-    updateView();
 });

@@ -3,79 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IdeaBoard Pro | Collective Innovation</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Group Idea Board</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="mesh-bg">
-        <div class="mesh-ball ball-1"></div>
-        <div class="mesh-ball ball-2"></div>
-        <div class="mesh-ball ball-3"></div>
-    </div>
-    
-    <div class="app-container">
-        <header class="app-header">
-            <div class="logo-area">
-                <span class="logo-icon">💡</span>
-                <h1>Group Idea Board</h1>
-            </div>
-            <p class="tagline">Where brilliance meets collaboration.</p>
+    <div class="container">
+        <header>
+            <h1>Group Idea Board</h1>
+            <p>Collaborate and share your creative thoughts</p>
         </header>
 
-        <main class="app-main">
-            <div class="control-panel">
-                <div class="input-container">
-                    <label for="idea-input">Describe your idea</label>
-                    <textarea id="idea-input" rows="1" placeholder="Type something revolutionary..." autocomplete="off"></textarea>
-                </div>
-
-                <div class="actions-row">
-                    <div class="select-wrapper">
-                        <label for="person-select">Suggested by</label>
-                        <select id="person-select">
-                            <option value="" disabled selected>Select a person</option>
-                            <option value="Alex">Alex Thompson</option>
-                            <option value="Jordan">Jordan Smith</option>
-                            <option value="Taylor">Taylor Reed</option>
-                            <option value="Riley">Riley Chen</option>
-                            <option value="Sam">Sam Wilson</option>
-                        </select>
-                    </div>
-                    <div class="btn-group">
-                        <button id="add-idea-btn" class="btn btn-primary">
-                            <span>Add Idea</span>
-                        </button>
-                        <button id="clear-input-btn" class="btn btn-outline">
-                            <span>Clear</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <section class="board-section">
-                <div class="section-header">
-                    <h2>Recent Submissions</h2>
-                    <div class="counter-badge">
-                        <span id="total-count">0</span> Submissions
-                    </div>
+        <main>
+            <section class="input-section">
+                <div class="input-group">
+                    <input type="text" id="ideaInput" placeholder="Enter your amazing idea..." autocomplete="off">
                 </div>
                 
-                <div id="ideas-viewport" class="ideas-grid">
-                    <ul id="idea-list"></ul>
-                    <div id="empty-state" class="empty-placeholder">
-                        <div class="empty-icon">📂</div>
-                        <h3>The board is empty</h3>
-                        <p>Share an idea to spark the conversation.</p>
+                <div class="controls">
+                    <div class="select-group">
+                        <label for="personSelect">Suggestor</label>
+                        <select id="personSelect">
+                            <option value="Alex Johnson">Alex Johnson</option>
+                            <option value="Jordan Smith">Jordan Smith</option>
+                            <option value="Taylor Reed">Taylor Reed</option>
+                            <option value="Casey Lee">Casey Lee</option>
+                            <option value="Morgan Drew">Morgan Drew</option>
+                        </select>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="addBtn" class="primary-btn">Add Idea</button>
+                        <button id="clearBtn" class="secondary-btn">Clear</button>
                     </div>
                 </div>
             </section>
+
+            <section class="stats-section">
+                <p>Total Ideas: <span id="totalCount">0</span></p>
+            </section>
+
+            <section class="ideas-section">
+                <ul id="ideasList">
+                    <!-- Ideas will be dynamically added here -->
+                </ul>
+            </section>
         </main>
 
-        <footer class="app-footer">
-            <p>&copy; 2026 IdeaBoard Pro &bull; Built for Modern Teams</p>
+        <footer>
+            <p>&copy; 2026 Group Idea Board. All rights reserved.</p>
         </footer>
     </div>
     <script src="script.js"></script>
