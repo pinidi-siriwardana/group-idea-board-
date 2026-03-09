@@ -1,12 +1,12 @@
 :root {
     --primary-color: #4f46e5;
     --primary-hover: #4338ca;
-    --bg-light: radial-gradient(at 0% 0%, #f1f5f9 0, transparent 50%), 
-                radial-gradient(at 100% 0%, #e2e8f0 0, transparent 50%),
-                #f8fafc;
-    --bg-dark: radial-gradient(at 0% 0%, #0f172a 0, transparent 50%), 
-               radial-gradient(at 100% 0%, #1e293b 0, transparent 50%),
-               #020617;
+    --bg-light: radial-gradient(at 0% 0%, #f1f5f9 0, transparent 50%),
+        radial-gradient(at 100% 0%, #e2e8f0 0, transparent 50%),
+        #f8fafc;
+    --bg-dark: radial-gradient(at 0% 0%, #0f172a 0, transparent 50%),
+        radial-gradient(at 100% 0%, #1e293b 0, transparent 50%),
+        #020617;
     --card-bg-light: rgba(255, 255, 255, 0.7);
     --card-bg-dark: rgba(30, 41, 59, 0.7);
     --text-light: #1e293b;
@@ -57,6 +57,7 @@ body.dark-mode {
     font-weight: 800;
     letter-spacing: -0.025em;
     background: linear-gradient(to right, #4f46e5, #9333ea);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -152,23 +153,29 @@ h2 {
     font-weight: 600;
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
     width: 100%;
     padding: 0.75rem;
     border-radius: 0.5rem;
-    border: 1px solid rgba(0,0,0,0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     background: rgba(255, 255, 255, 0.5);
     color: inherit;
     font-size: 1rem;
     transition: var(--transition);
 }
 
-.dark-mode input, .dark-mode select, .dark-mode textarea {
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea {
     background: rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
@@ -239,7 +246,7 @@ button {
 #memberList li {
     padding: 0.5rem;
     border-radius: 0.25rem;
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
     display: flex;
@@ -297,7 +304,7 @@ button {
 .idea-item {
     padding: 1.25rem;
     border-radius: 1rem;
-    background: rgba(0,0,0,0.03);
+    background: rgba(0, 0, 0, 0.03);
     border-left: 5px solid var(--primary-color);
     animation: slideIn 0.4s ease-out;
     position: relative;
@@ -305,7 +312,7 @@ button {
 }
 
 .idea-item:hover {
-    background: rgba(0,0,0,0.05);
+    background: rgba(0, 0, 0, 0.05);
 }
 
 .dark-mode .idea-item {
@@ -347,8 +354,15 @@ button {
 }
 
 @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-10px); }
-    to { opacity: 1; transform: translateX(0); }
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .idea-text {
@@ -385,13 +399,16 @@ button {
 ::-webkit-scrollbar {
     width: 6px;
 }
+
 ::-webkit-scrollbar-track {
     background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
     background: rgba(156, 163, 175, 0.5);
     border-radius: 10px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(156, 163, 175, 0.8);
 }
