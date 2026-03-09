@@ -3,298 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IdeaFlow Pro — Advanced Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-            background: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-                        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-                        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-            background-color: #0f172a;
-            color: #f8fafc;
-        }
-
-        .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.95) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .animate-card {
-            animation: fadeInScale 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
-
-        .priority-high { background: rgba(225, 29, 72, 0.1); color: #fb7185; border: 1px solid rgba(225, 29, 72, 0.2); }
-        .priority-medium { background: rgba(245, 158, 11, 0.1); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.2); }
-        .priority-low { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
-    </style>
+    <title>Group Idea Board</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="p-4 md:p-8">
+<body class="light-mode">
+    <nav class="navbar">
+        <div class="logo">IdeaBoard</div>
+        <div class="mode-toggle">
+            <button id="themeToggle" class="toggle-btn">
+                <span class="icon">🌙</span>
+            </button>
+        </div>
+    </nav>
 
-    <div class="max-w-6xl mx-auto flex flex-col gap-6">
-        
-        <!-- Navigation / Header -->
-        <header class="glass rounded-2xl px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+    <header class="header">
+        <h1>Collaborative Brainstorming</h1>
+        <p>Share your vision with the team</p>
+    </header>
+
+    <main class="container">
+        <div class="grid">
+            <!-- Member Management Section -->
+            <section class="card">
+                <h2>Team Members</h2>
+                <div class="input-group">
+                    <input type="text" id="newMemberInput" placeholder="Enter new member name...">
+                    <button id="addMemberBtn">Add Member</button>
                 </div>
-                <h1 class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">IdeaFlow Pro</h1>
-            </div>
-            
-            <div class="flex items-center gap-6">
-                <div class="flex flex-col items-end">
-                    <span class="text-[10px] uppercase tracking-[2px] text-slate-500 font-bold">Idea Analytics</span>
-                    <div class="flex items-center gap-2 mt-1">
-                        <span id="analyticsBadge" class="px-3 py-1 bg-white/10 rounded-full text-xs font-bold text-indigo-400 border border-white/5">0 Total Entries</span>
-                    </div>
+                <div class="member-list-container">
+                    <ul id="memberList">
+                        <!-- Members will appear here -->
+                    </ul>
                 </div>
-            </div>
-        </header>
+            </section>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
-            <!-- Left Panel: Input -->
-            <aside class="lg:col-span-4 flex flex-col gap-6">
-                <section class="glass rounded-2xl p-6">
-                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-6 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                        New Submission
-                    </h2>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 mb-2">Member</label>
-                            <select id="userSelect" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all cursor-pointer">
-                                <option value="" disabled selected class="bg-slate-900">Select Member</option>
-                                <option value="Alex Rivers" class="bg-slate-900">Alex Rivers</option>
-                                <option value="Jordan Smith" class="bg-slate-900">Jordan Smith</option>
-                                <option value="Taylor Wong" class="bg-slate-900">Taylor Wong</option>
-                                <option value="Morgan Lee" class="bg-slate-900">Morgan Lee</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 mb-2">Priority Level</label>
-                            <select id="prioritySelect" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all cursor-pointer">
-                                <option value="Low" class="bg-slate-900">Low Priority</option>
-                                <option value="Medium" selected class="bg-slate-900">Medium Priority</option>
-                                <option value="High" class="bg-slate-900">High Priority</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-500 mb-2">Idea Description</label>
-                            <textarea id="ideaInput" rows="3" placeholder="Explain your vision..." 
-                                class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all resize-none"></textarea>
-                        </div>
-
-                        <button id="addIdeaBtn" class="w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-xl transition-all shadow-lg shadow-indigo-600/20 active:scale-95 flex items-center justify-center gap-2">
-                            Deploy Idea
-                        </button>
-                        <p id="errorMessage" class="text-rose-400 text-[10px] text-center font-bold uppercase hidden">Error: All fields are required</p>
-                    </div>
-                </section>
-
-                <!-- Search/Filter -->
-                <section class="glass rounded-2xl p-6">
-                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-                        Filter Feed
-                    </h2>
-                    <input type="text" id="searchInput" placeholder="Search ideas or members..." 
-                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-xs text-slate-300 placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-white/10 transition-all">
-                </section>
-            </aside>
-
-            <!-- Right Panel: Feed -->
-            <main class="lg:col-span-8 flex flex-col gap-4">
-                <div id="ideasList" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[700px] overflow-y-auto pr-2">
-                    <!-- Cards injected here -->
+            <!-- Idea Submission Section -->
+            <section class="card">
+                <h2>Submit Idea</h2>
+                <div class="input-group">
+                    <label for="memberSelect">Select Member</label>
+                    <select id="memberSelect">
+                        <option value="" disabled selected>Choose a member...</option>
+                    </select>
                 </div>
-                
-                <!-- Empty State -->
-                <div id="emptyState" class="glass rounded-2xl p-20 flex flex-col items-center justify-center text-center">
-                    <div class="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center text-slate-600 mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
-                    </div>
-                    <p class="text-slate-400 font-medium">Feed is currently silent</p>
-                    <p class="text-slate-600 text-xs mt-1">Submit an idea to start the stream.</p>
+                <div class="input-group">
+                    <label for="ideaInput">Your Idea</label>
+                    <textarea id="ideaInput" placeholder="Describe your idea here..."></textarea>
                 </div>
-            </main>
+                <button id="submitIdeaBtn" class="primary-btn">Submit Idea</button>
+            </section>
         </div>
 
-        <!-- Footer -->
-        <footer class="glass rounded-2xl px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <span class="text-[10px] uppercase tracking-[3px] text-slate-500 font-bold">Enterprise Brainstorming v2.0</span>
-            <div class="flex items-center gap-3">
-                <button id="exportBtn" class="px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/5 rounded-lg text-[10px] font-bold uppercase tracking-wider text-slate-300 transition-all flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                    JSON Export
-                </button>
-                <button id="resetAllBtn" class="px-4 py-2 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/20 rounded-lg text-[10px] font-bold uppercase tracking-wider text-rose-400 transition-all flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                    Wipe Board
-                </button>
+        <!-- Idea Feed Section -->
+        <section class="idea-feed card">
+            <div class="feed-header">
+                <h2>Group Ideas</h2>
+                <div class="stats">
+                    Total Ideas: <span id="totalIdeas">0</span>
+                </div>
             </div>
-        </footer>
-    </div>
+            <div id="ideasList" class="ideas-list">
+                <!-- Ideas will appear here -->
+            </div>
+            <div class="feed-actions">
+                <button id="clearAllBtn" class="danger-btn">Clear All Ideas</button>
+            </div>
+        </section>
+    </main>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const userSelect = document.getElementById('userSelect');
-            const prioritySelect = document.getElementById('prioritySelect');
-            const ideaInput = document.getElementById('ideaInput');
-            const addIdeaBtn = document.getElementById('addIdeaBtn');
-            const ideasList = document.getElementById('ideasList');
-            const emptyState = document.getElementById('emptyState');
-            const errorMessage = document.getElementById('errorMessage');
-            const analyticsBadge = document.getElementById('analyticsBadge');
-            const searchInput = document.getElementById('searchInput');
-            const resetAllBtn = document.getElementById('resetAllBtn');
-            const exportBtn = document.getElementById('exportBtn');
+    <footer class="footer">
+        <p>&copy; 2026 Group Idea Board. All rights reserved.</p>
+    </footer>
 
-            let ideas = JSON.parse(localStorage.getItem('ideaflow_data')) || [];
-
-            const saveToLocal = () => {
-                localStorage.setItem('ideaflow_data', JSON.stringify(ideas));
-                updateDisplay();
-            };
-
-            const formatTimestamp = (ts) => {
-                const date = new Date(ts);
-                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' + 
-                       date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-            };
-
-            const renderCard = (item) => {
-                const card = document.createElement('div');
-                card.className = 'glass rounded-xl p-5 animate-card flex flex-col justify-between group relative overflow-hidden';
-                card.dataset.id = item.id;
-                
-                const priorityClass = `priority-${item.priority.toLowerCase()}`;
-                
-                card.innerHTML = `
-                    <div class="flex flex-col gap-3">
-                        <div class="flex items-center justify-between">
-                            <span class="px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest ${priorityClass}">${item.priority}</span>
-                            <span class="text-[10px] font-medium text-slate-500">${formatTimestamp(item.timestamp)}</span>
-                        </div>
-                        <p class="text-sm leading-relaxed text-slate-200 font-medium">${item.text}</p>
-                    </div>
-                    
-                    <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-6 h-6 rounded-full bg-white/5 flex items-center justify-center text-[10px] font-bold text-slate-400">
-                                ${item.user.charAt(0)}
-                            </div>
-                            <span class="text-[11px] font-bold text-slate-400">${item.user}</span>
-                        </div>
-                        <button class="delete-btn opacity-0 group-hover:opacity-100 p-1.5 text-slate-600 hover:text-rose-400 transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
-                        </button>
-                    </div>
-                `;
-
-                card.querySelector('.delete-btn').addEventListener('click', () => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'scale(0.9)';
-                    setTimeout(() => {
-                        ideas = ideas.filter(i => i.id !== item.id);
-                        saveToLocal();
-                    }, 200);
-                });
-
-                return card;
-            };
-
-            const updateDisplay = (filterText = '') => {
-                ideasList.innerHTML = '';
-                const filtered = ideas.filter(i => 
-                    i.text.toLowerCase().includes(filterText.toLowerCase()) || 
-                    i.user.toLowerCase().includes(filterText.toLowerCase())
-                );
-
-                if (filtered.length === 0) {
-                    emptyState.classList.remove('hidden');
-                } else {
-                    emptyState.classList.add('hidden');
-                    filtered.forEach(item => {
-                        ideasList.appendChild(renderCard(item));
-                    });
-                }
-
-                analyticsBadge.textContent = `${ideas.length} Total Entry${ideas.length === 1 ? '' : 'ies'}`;
-            };
-
-            const addIdea = () => {
-                const user = userSelect.value;
-                const priority = prioritySelect.value;
-                const text = ideaInput.value.trim();
-
-                if (!user || !text) {
-                    errorMessage.classList.remove('hidden');
-                    setTimeout(() => errorMessage.classList.add('hidden'), 3000);
-                    return;
-                }
-
-                const newIdea = {
-                    id: Date.now(),
-                    user,
-                    priority,
-                    text,
-                    timestamp: Date.now()
-                };
-
-                ideas.unshift(newIdea);
-                saveToLocal();
-
-                ideaInput.value = '';
-                ideaInput.focus();
-            };
-
-            addIdeaBtn.addEventListener('click', addIdea);
-            
-            searchInput.addEventListener('input', (e) => {
-                updateDisplay(e.target.value);
-            });
-
-            resetAllBtn.addEventListener('click', () => {
-                if (confirm('Critical: This will permanently wipe the entire board. Proceed?')) {
-                    ideas = [];
-                    saveToLocal();
-                }
-            });
-
-            exportBtn.addEventListener('click', () => {
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ideas, null, 2));
-                const downloadAnchorNode = document.createElement('a');
-                downloadAnchorNode.setAttribute("href", dataStr);
-                downloadAnchorNode.setAttribute("download", "ideaflow_backup_" + Date.now() + ".json");
-                document.body.appendChild(downloadAnchorNode);
-                downloadAnchorNode.click();
-                downloadAnchorNode.remove();
-            });
-
-            // Initial render
-            updateDisplay();
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
