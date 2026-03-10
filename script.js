@@ -257,17 +257,22 @@ class DashboardController {
                     );
                 
                 if (filtered.length === 0) {
-                    feed.innerHTML = `<p class="empty-msg" style="margin-top: 2rem;">${filterTerm ? 'No ideas match your search.' : 'No batch ideas yet. Be the first to post!'}</p>`;
+                    feed.innerHTML = `<p class="empty-msg" style="grid-column: 1/-1; margin-top: 4rem;">${filterTerm ? 'No ideas match your search.' : 'No batch ideas yet. Be the first to post!'}</p>`;
                 } else {
                     filtered.slice().reverse().forEach(id => {
+                        const initial = id.author.charAt(0).toUpperCase();
                         const div = document.createElement('div'); div.className = 'idea-item';
                         div.innerHTML = `
                             <div class="idea-header">
-                                <h4>${id.author}</h4>
+                                <div class="author-meta">
+                                    <div class="author-avatar">${initial}</div>
+                                    <h4>${id.author}</h4>
+                                </div>
                                 <button onclick="window.dashboard.delI(${id.originalIndex})" class="del-idea-btn" title="Remove Idea">&times;</button>
                             </div>
                             <p>${id.text}</p>
                             <div class="idea-footer">
+                                <span class="idea-tag">💡 Proposal</span>
                                 <small>${id.date}</small>
                             </div>
                         `;
@@ -304,6 +309,15 @@ class DashboardController {
 
     syncDashboardStats() {
         const hGpa = document.getElementById('homeGpa'), hB = document.getElementById('homeBadge');
+        const hFocus = document.getElementById('homeFocusTime'), hIdea = document.getElementById('homeIdeaCount');
+        const greeting = document.getElementById('greetingText');
+        
+        // Personal Greeting
+        const hour = new Date().getHours();
+        const msg = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+        if (greeting) greeting.textContent = `${msg}, Scholar! 🎓`;
+
+        // GPA Stats
         const g = parseFloat(this.load('last_gpa') || 0);
         if (hGpa) hGpa.textContent = g.toFixed(2);
         if (g > 0 && hB) {
@@ -311,6 +325,27 @@ class DashboardController {
             hB.textContent = g >= 3.7 ? "First Class" : g >= 3.3 ? "2nd Upper" : g >= 3.0 ? "2nd Lower" : "Pass";
             hB.style.backgroundColor = g >= 3.7 ? "var(--first-class)" : g >= 3.3 ? "var(--second-upper)" : "var(--pass)";
         }
+
+        // Focus Stats
+        const history = this.load('timer_history') || [];
+        const totalFocus = history.reduce((acc, curr) => acc + curr.duration, 0);
+        if (hFocus) hFocus.textContent = `${totalFocus} mins`;
+
+        // Idea Stats
+        const ideas = this.load('ideas') || [];
+        if (hIdea) hIdea.textContent = ideas.length;
+
+        // Quotes System
+        const quotes = [
+            { t: "The beautiful thing about learning is that no one can take it away from you.", a: "B.B. King" },
+            { t: "Education is the most powerful weapon which you can use to change the world.", a: "Nelson Mandela" },
+            { t: "An investment in knowledge pays the best interest.", a: "Benjamin Franklin" },
+            { t: "Success is the sum of small efforts, repeated day in and day out.", a: "Robert Collier" }
+        ];
+        const quoteObj = quotes[Math.floor(Math.random() * quotes.length)];
+        const qElem = document.getElementById('dailyQuote'), aElem = document.getElementById('quoteAuthor');
+        if (qElem) qElem.textContent = `"${quoteObj.t}"`;
+        if (aElem) aElem.textContent = `— ${quoteObj.a}`;
     }
 }
 

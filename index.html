@@ -64,23 +64,72 @@
                 
                 <!-- Section: Home -->
                 <section id="home" class="active">
-                    <div class="card">
-                        <h1 style="margin-bottom: 1rem;">Welcome, UCSC Student! 🎓</h1>
-                        <p style="color: var(--text-muted);">Access your academic toolkit for the University of Colombo School of Computing. Monitor your GPA, manage study sessions, and collaborate with your batch.</p>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                        <div class="card">
-                            <h3>Current GPA</h3>
-                            <div style="display: flex; align-items: center; gap: 15px;">
-                                <h2 style="font-size: 2.5rem; color: var(--primary-maroon);" id="homeGpa">0.00</h2>
-                                <div id="homeBadge" class="standing-badge" style="display:none; margin-top:0;"></div>
+                    <!-- Hero Section -->
+                    <div class="hero-card">
+                        <div class="hero-content">
+                            <h1 id="greetingText">Welcome back, Scholar! 🎓</h1>
+                            <p>Ready to conquer your academic goals today? Your UCSC toolkit is optimized and ready.</p>
+                            <div class="hero-badges">
+                                <span class="hero-badge">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                    System Active
+                                </span>
+                                <span class="hero-badge">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    Focus Mode Ready
+                                </span>
                             </div>
                         </div>
-                        <div class="card">
-                            <h3>Study Session</h3>
-                            <p style="margin-top: 1rem;">Standard 25:00 Pomodoro</p>
-                            <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="document.querySelector('[data-target=timer]').click()">Launch Timer</button>
+                        <div class="hero-illustration">
+                            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Stats Overview Grid -->
+                    <div class="home-stats-grid">
+                        <div class="stat-card" onclick="document.querySelector('[data-target=gpa]').click()">
+                            <div class="stat-icon gpa-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Academic GPA</h3>
+                                <div class="stat-value-wrap">
+                                    <h2 id="homeGpa">0.00</h2>
+                                    <div id="homeBadge" class="standing-badge" style="display:none; margin-top:0;"></div>
+                                </div>
+                                <p>Current Standing</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card" onclick="document.querySelector('[data-target=timer]').click()">
+                            <div class="stat-icon timer-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Study Momentum</h3>
+                                <h2 id="homeFocusTime">0 mins</h2>
+                                <p>Total Focus Time</p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card" onclick="document.querySelector('[data-target=ideas]').click()">
+                            <div class="stat-icon idea-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                            </div>
+                            <div class="stat-info">
+                                <h3>Batch Collaboration</h3>
+                                <h2 id="homeIdeaCount">0</h2>
+                                <p>Shared Innovation Ideas</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Motivation -->
+                    <div class="card quote-card">
+                        <div class="quote-content">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="var(--primary-maroon)" opacity="0.1" style="position: absolute; top: 1rem; left: 1rem;"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C14.9124 8 14.017 7.10457 14.017 6V5C14.017 3.89543 14.9124 3 16.017 3H19.017C21.2261 3 23.017 4.79086 23.017 7V15C23.017 18.3137 20.3307 21 17.017 21H14.017ZM1.017 21L1.017 18C1.017 16.8954 1.91243 16 3.017 16H6.017C6.56928 16 7.017 15.5523 7.017 15V9C7.017 8.44772 6.56928 8 6.017 8H3.017C1.91243 8 1.017 7.10457 1.017 6V5C1.017 3.89543 1.91243 3 3.017 3H6.017C8.22614 3 10.017 4.79086 10.017 7V15C10.017 18.3137 7.33071 21 4.017 21H1.017Z"></path></svg>
+                            <p id="dailyQuote">"The beautiful thing about learning is that no one can take it away from you."</p>
+                            <span id="quoteAuthor">— B.B. King</span>
                         </div>
                     </div>
                 </section>
@@ -231,33 +280,40 @@
                 <!-- Section: Idea Board -->
                 <section id="ideas">
                     <div class="idea-grid">
-                        <div class="card">
-                            <h2 class="card-title">👥 Batch Collaboration</h2>
-                            <div style="margin-bottom: 2rem;">
-                                <h3>Manage Contributors</h3>
-                                <div style="display: flex; gap: 10px; margin-top: 0.5rem;">
-                                    <input type="text" id="newMemberInput" placeholder="Name/Reg No...">
-                                    <button id="addMemberBtn" class="btn btn-primary">Add</button>
+                        <div class="collaboration-sidebar">
+                            <div class="card">
+                                <h2 class="card-title">👥 Team & Collaboration</h2>
+                                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;">Manage your project team and propose new innovations to the batch.</p>
+                                
+                                <div style="margin-bottom: 2rem;">
+                                    <h3>Manage Contributors</h3>
+                                    <div style="display: flex; gap: 10px; margin-top: 0.5rem;">
+                                        <input type="text" id="newMemberInput" placeholder="Name/Reg No...">
+                                        <button id="addMemberBtn" class="btn btn-primary" style="padding: 0.6rem 1rem;">Add</button>
+                                    </div>
+                                    <ul id="memberList" style="margin-top: 1.2rem; list-style: none;"></ul>
                                 </div>
-                                <ul id="memberList" style="margin-top: 1rem; list-style: none;"></ul>
-                            </div>
-                            
-                            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
-                            
-                            <h3>Share Batch Idea</h3>
-                            <div style="margin-top: 1rem;">
-                                <select id="memberSelect" style="margin-bottom: 1rem;"></select>
-                                <textarea id="ideaInput" placeholder="Propose a project or idea..."></textarea>
-                                <button id="submitIdeaBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Post to Batch Feed</button>
+                                
+                                <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+                                
+                                <h3>Share Batch Idea</h3>
+                                <div style="margin-top: 1rem;">
+                                    <select id="memberSelect" style="margin-bottom: 1rem;"></select>
+                                    <textarea id="ideaInput" placeholder="Propose a project or idea..."></textarea>
+                                    <button id="submitIdeaBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Post to Batch Feed</button>
+                                </div>
                             </div>
                         </div>
 
                         <div class="card feed-card">
                             <div class="feed-header">
-                                <h2 class="card-title" style="margin-bottom: 0;">💡 Innovation Feed</h2>
+                                <div>
+                                    <h2 class="card-title" style="margin-bottom: 4px;">💡 Innovation Hub</h2>
+                                    <p style="color: var(--text-muted); font-size: 0.85rem;">Discover and search ideas from your batchmates.</p>
+                                </div>
                                 <div class="search-wrapper">
                                     <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                                    <input type="text" id="filterInput" placeholder="Search batch ideas...">
+                                    <input type="text" id="filterInput" placeholder="Search ideas...">
                                 </div>
                             </div>
                             <div id="ideasList" class="ideas-scroll-area"></div>
