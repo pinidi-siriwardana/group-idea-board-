@@ -3,82 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Idea Board</title>
+    <title>UCSC Colombo | Student Dashboard</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body class="light-mode">
-    <nav class="navbar">
-        <div class="logo">IdeaBoard</div>
-        <div class="mode-toggle">
-            <button id="themeToggle" class="toggle-btn">
-                <span class="icon">🌙</span>
-            </button>
-        </div>
-    </nav>
-
-    <header class="header">
-        <h1>Collaborative Brainstorming</h1>
-        <p>Share your vision with the team</p>
-    </header>
-
-    <main class="container">
-        <div class="grid">
-            <!-- Member Management Section -->
-            <section class="card">
-                <h2>Team Members</h2>
-                <div class="input-group">
-                    <input type="text" id="newMemberInput" placeholder="Enter new member name...">
-                    <button id="addMemberBtn">Add Member</button>
+    <div class="app-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div class="logo-placeholder">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                    <span>UCSC Colombo</span>
                 </div>
-                <div class="member-list-container">
-                    <ul id="memberList">
-                        <!-- Members will appear here -->
-                    </ul>
-                </div>
-            </section>
+            </div>
+            
+            <div class="sidebar-section">
+                <h3>Academic Calendar</h3>
+                <ul class="event-list">
+                    <li class="event-item">
+                        <h4>Semester Examinations</h4>
+                        <p>March 15 • Reid Avenue Labs</p>
+                    </li>
+                    <li class="event-item">
+                        <h4>ICTer Conference 2026</h4>
+                        <p>April 02-04 • Main Hall</p>
+                    </li>
+                    <li class="event-item">
+                        <h4>Research Symposium</h4>
+                        <p>May 10 • Post Graduate Center</p>
+                    </li>
+                </ul>
+            </div>
+        </aside>
 
-            <!-- Idea Submission Section -->
-            <section class="card">
-                <h2>Submit Idea</h2>
-                <div class="input-group">
-                    <label for="memberSelect">Select Member</label>
-                    <select id="memberSelect">
-                        <option value="" disabled selected>Choose a member...</option>
-                    </select>
+        <!-- Main Content Area -->
+        <div class="main-area">
+            <!-- Navbar -->
+            <nav class="navbar">
+                <div class="nav-links">
+                    <a href="#" class="nav-link active" data-target="home">Dashboard Home</a>
+                    <a href="#" class="nav-link" data-target="gpa">GPA Calculator</a>
+                    <a href="#" class="nav-link" data-target="timer">Study Timer</a>
+                    <a href="#" class="nav-link" data-target="ideas">Idea Board</a>
                 </div>
-                <div class="input-group">
-                    <label for="ideaInput">Your Idea</label>
-                    <textarea id="ideaInput" placeholder="Describe your idea here..."></textarea>
-                </div>
-                <button id="submitIdeaBtn" class="primary-btn">Submit Idea</button>
-            </section>
-        </div>
 
-        <!-- Idea Feed Section -->
-        <section class="idea-feed card">
-            <div class="feed-header">
-                <div class="header-main">
-                    <h2>Group Ideas</h2>
-                    <div class="stats">
-                        Total Ideas: <span id="totalIdeas">0</span>
+                <div class="theme-switch-wrapper">
+                    <span style="font-size: 0.8rem; font-weight: 600;">DARK MODE</span>
+                    <label class="theme-switch">
+                        <input type="checkbox" id="themeCheckbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </nav>
+
+            <!-- Content Viewport -->
+            <main class="content-viewport" id="viewport">
+                
+                <!-- Section: Home -->
+                <section id="home" class="active">
+                    <div class="card">
+                        <h1 style="margin-bottom: 1rem;">Welcome, UCSC Student! 🎓</h1>
+                        <p style="color: var(--text-muted);">Access your academic toolkit for the University of Colombo School of Computing. Monitor your GPA, manage study sessions, and collaborate with your batch.</p>
                     </div>
-                </div>
-                <div class="filter-group">
-                    <input type="text" id="filterInput" placeholder="Filter by member or keyword...">
-                </div>
-            </div>
-            <div id="ideasList" class="ideas-list">
-                <!-- Ideas will appear here -->
-            </div>
-            <div class="feed-actions">
-                <button id="clearAllBtn" class="danger-btn">Clear All Ideas</button>
-            </div>
-        </section>
-    </main>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div class="card">
+                            <h3>Current GPA</h3>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <h2 style="font-size: 2.5rem; color: var(--primary-maroon);" id="homeGpa">0.00</h2>
+                                <div id="homeBadge" class="standing-badge" style="display:none; margin-top:0;"></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h3>Study Session</h3>
+                            <p style="margin-top: 1rem;">Standard 25:00 Pomodoro</p>
+                            <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="document.querySelector('[data-target=timer]').click()">Launch Timer</button>
+                        </div>
+                    </div>
+                </section>
 
-    <footer class="footer">
-        <p>&copy; 2026 Group Idea Board. All rights reserved.</p>
-    </footer>
+                <!-- Section: GPA Calculator (ADVANCED) -->
+                <section id="gpa">
+                    <div class="gpa-layout">
+                        <!-- Module Input Area -->
+                        <div class="card">
+                            <h2 class="card-title">📊 UCSC GPA Calculator</h2>
+                            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Enter your semester results below to analyze your academic standing.</p>
+                            
+                            <table class="gpa-table" id="gpaTable">
+                                <thead>
+                                    <tr>
+                                        <th>Course Module</th>
+                                        <th>Credits</th>
+                                        <th>Grade</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gpaBody">
+                                    <tr>
+                                        <td><input type="text" placeholder="e.g. SCS 1201" class="course-name"></td>
+                                        <td><input type="number" placeholder="3" class="course-credits"></td>
+                                        <td>
+                                            <select class="course-grade">
+                                                <option value="4.0">A / A+</option>
+                                                <option value="3.7">A-</option>
+                                                <option value="3.3">B+</option>
+                                                <option value="3.0">B</option>
+                                                <option value="2.7">B-</option>
+                                                <option value="2.3">C+</option>
+                                                <option value="2.0">C</option>
+                                                <option value="1.5">C-</option>
+                                                <option value="1.0">D</option>
+                                                <option value="0.0">F</option>
+                                            </select>
+                                        </td>
+                                        <td><button class="remove-row" style="background:none; border:none; color: #E53E3E; cursor:pointer; font-size:1.2rem;">&times;</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="display: flex; gap: 10px;">
+                                <button id="addRowBtn" class="btn btn-accent">Add Module</button>
+                                <button id="calculateGpaBtn" class="btn btn-primary">Analyze Performance</button>
+                            </div>
+
+                            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 2rem 0;">
+
+                            <h3 class="card-title" style="font-size: 1rem;">🎯 "What-If" Goal Analysis</h3>
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:1rem; margin-top:1.5rem;">
+                                <div class="input-group">
+                                    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 5px;">Target Cumulative GPA</label>
+                                    <input type="number" step="0.01" id="targetGpaInput" placeholder="3.70">
+                                </div>
+                                <div class="input-group">
+                                    <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 5px;">Remaining Credits</label>
+                                    <input type="number" id="remainingCreditsInput" placeholder="45">
+                                </div>
+                            </div>
+                            <button id="whatIfBtn" class="btn btn-accent" style="width: 100%; margin-top: 1rem;">Calculate Target Path</button>
+                            <div id="whatIfResult" style="margin-top: 1.5rem; display: none; padding: 1rem; border-radius: var(--radius-md); background: rgba(0,0,0,0.02); font-size: 0.9rem; border: 1px dashed var(--border-color);"></div>
+                        </div>
+                        
+                        <!-- Results Sidebar -->
+                        <div class="score-card-container">
+                            <div class="card score-card" style="margin-bottom: 1.5rem;">
+                                <h3 style="color: rgba(255,255,255,0.8); font-size: 0.9rem; text-transform: uppercase;">Current GPA</h3>
+                                <h2 id="finalGpaDisplay" style="margin: 0.5rem 0;">0.00</h2>
+                                
+                                <div class="gpa-meter">
+                                    <div class="gpa-meter-fill" id="gpaMeterFill"></div>
+                                </div>
+                                
+                                <div id="standingBadge" class="standing-badge" style="display:none;"></div>
+                                <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.8;">UCSC Weighted Standard</p>
+                            </div>
+
+                            <div id="motivationBox" class="motivation-box" style="display:none;">
+                                <h4 id="motivationTitle" style="font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--primary-maroon);">Academic Insight</h4>
+                                <p id="motivationText" style="font-size: 0.9rem; line-height: 1.6;"></p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Timer -->
+                <section id="timer">
+                    <div class="card" style="max-width: 600px; margin: 0 auto; text-align: center;">
+                        <h2 class="card-title">⏳ Study Focus Session</h2>
+                        <div class="timer-container">
+                            <div class="timer-circle" id="timerCircle">
+                                <div class="timer-display" id="timerDisplay">25:00</div>
+                                <div class="timer-status" id="timerStatus">Ready</div>
+                            </div>
+                            <div class="timer-controls">
+                                <button id="startTimerBtn" class="btn btn-primary">Start Session</button>
+                                <button id="resetTimerBtn" class="btn btn-accent">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section: Idea Board -->
+                <section id="ideas">
+                    <div class="idea-grid">
+                        <div class="card">
+                            <h2 class="card-title">👥 Batch Collaboration</h2>
+                            <div style="margin-bottom: 2rem;">
+                                <h3>Manage Contributors</h3>
+                                <div style="display: flex; gap: 10px; margin-top: 0.5rem;">
+                                    <input type="text" id="newMemberInput" placeholder="Name/Reg No...">
+                                    <button id="addMemberBtn" class="btn btn-primary">Add</button>
+                                </div>
+                                <ul id="memberList" style="margin-top: 1rem; list-style: none;"></ul>
+                            </div>
+                            
+                            <hr style="border: none; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+                            
+                            <h3>Share Batch Idea</h3>
+                            <div style="margin-top: 1rem;">
+                                <select id="memberSelect" style="margin-bottom: 1rem;"></select>
+                                <textarea id="ideaInput" placeholder="Propose a project or idea..."></textarea>
+                                <button id="submitIdeaBtn" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Post to Batch Feed</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                                <h2 class="card-title" style="margin-bottom: 0;">💡 Innovation Feed</h2>
+                                <input type="text" id="filterInput" placeholder="Search batch ideas..." style="width: 250px;">
+                            </div>
+                            <div id="ideasList"></div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
