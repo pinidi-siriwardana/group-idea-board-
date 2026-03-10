@@ -138,12 +138,44 @@ class DashboardController {
         const status = document.getElementById('timerStatus');
         const stage = document.getElementById('timerStage');
         const progressCircle = document.getElementById('timerProgress');
+        const historyList = document.getElementById('timerHistoryList');
+        const totalStats = document.getElementById('totalFocusStats');
         
         const circumference = 2 * Math.PI * 135; // 2 * pi * r
         const totalSeconds = 25 * 60;
         let timeLeft = totalSeconds;
         let timerId = null;
         let isRunning = false;
+
+        // History Management
+        this.timerHistory = this.load('timer_history') || [];
+
+        const updateHistoryUI = () => {
+            if (this.timerHistory.length === 0) {
+                historyList.innerHTML = '<p class="empty-msg">No sessions recorded yet. Stay focused!</p>';
+                totalStats.textContent = 'Total: 0 mins';
+                return;
+            }
+
+            historyList.innerHTML = '';
+            let totalMins = 0;
+            this.timerHistory.slice().reverse().forEach(session => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `<span>${session.duration} min session</span> <span>${session.time}</span>`;
+                historyList.appendChild(item);
+                totalMins += session.duration;
+            });
+            totalStats.textContent = `Total Focus: ${totalMins} mins`;
+        };
+
+        const saveSession = (duration) => {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            this.timerHistory.push({ duration, time: timeStr, date: now.toLocaleDateString() });
+            this.save('timer_history', this.timerHistory);
+            updateHistoryUI();
+        };
 
         const setProgress = (percent) => {
             const offset = circumference - (percent / 100 * circumference);
@@ -176,7 +208,8 @@ class DashboardController {
                         clearInterval(timerId);
                         isRunning = false;
                         stage.classList.remove('timer-active');
-                        alert("Focus Complete!");
+                        saveSession(25); // Save 25 min session
+                        alert("Focus Complete! Session recorded.");
                         startBtn.textContent = "Start Session";
                         timeLeft = totalSeconds;
                         update();
@@ -197,35 +230,75 @@ class DashboardController {
         
         // Initial setup
         setProgress(0);
+        updateHistoryUI();
     }
 
     initIdeaBoard() {
         this.members = this.load('members') || []; this.ideas = this.load('ideas') || [];
-        const render = () => {
+        const render = (filterTerm = '') => {
             const mList = document.getElementById('memberList'), s = document.getElementById('memberSelect');
-            mList.innerHTML = ''; s.innerHTML = '<option value="" disabled selected>Select Author</option>';
-            this.members.forEach((m, i) => {
-                const li = document.createElement('li');
-                li.innerHTML = `<span>${m}</span> <button onclick="window.dashboard.delM(${i})" style="color:#ff4444; background:none; border:none; cursor:pointer;">&times;</button>`;
-                mList.appendChild(li);
-                const opt = document.createElement('option'); opt.value = m; opt.textContent = m; s.appendChild(opt);
-            });
-            const feed = document.getElementById('ideasList'); feed.innerHTML = '';
-            this.ideas.slice().reverse().forEach(id => {
-                const div = document.createElement('div'); div.className = 'idea-item';
-                div.innerHTML = `<h4>${id.author}</h4><p>${id.text}</p><small>${id.date}</small>`;
-                feed.appendChild(div);
-            });
+            if (mList && s) {
+                mList.innerHTML = ''; s.innerHTML = '<option value="" disabled selected>Select Author</option>';
+                this.members.forEach((m, i) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>${m}</span> <button onclick="window.dashboard.delM(${i})" style="color:#ff4444; background:none; border:none; cursor:pointer;">&times;</button>`;
+                    mList.appendChild(li);
+                    const opt = document.createElement('option'); opt.value = m; opt.textContent = m; s.appendChild(opt);
+                });
+            }
+
+            const feed = document.getElementById('ideasList');
+            if (feed) {
+                feed.innerHTML = '';
+                const filtered = this.ideas.map((id, index) => ({ ...id, originalIndex: index }))
+                    .filter(id => 
+                        id.author.toLowerCase().includes(filterTerm.toLowerCase()) || 
+                        id.text.toLowerCase().includes(filterTerm.toLowerCase())
+                    );
+                
+                if (filtered.length === 0) {
+                    feed.innerHTML = `<p class="empty-msg" style="margin-top: 2rem;">${filterTerm ? 'No ideas match your search.' : 'No batch ideas yet. Be the first to post!'}</p>`;
+                } else {
+                    filtered.slice().reverse().forEach(id => {
+                        const div = document.createElement('div'); div.className = 'idea-item';
+                        div.innerHTML = `
+                            <div class="idea-header">
+                                <h4>${id.author}</h4>
+                                <button onclick="window.dashboard.delI(${id.originalIndex})" class="del-idea-btn" title="Remove Idea">&times;</button>
+                            </div>
+                            <p>${id.text}</p>
+                            <div class="idea-footer">
+                                <small>${id.date}</small>
+                            </div>
+                        `;
+                        feed.appendChild(div);
+                    });
+                }
+            }
         };
+
+        const filterInput = document.getElementById('filterInput');
+        if (filterInput) {
+            filterInput.addEventListener('input', (e) => render(e.target.value.trim()));
+        }
+
         document.getElementById('addMemberBtn').onclick = () => {
             const v = document.getElementById('newMemberInput').value.trim();
             if (v && !this.members.includes(v)) { this.members.push(v); this.save('members', this.members); render(); }
         };
         document.getElementById('submitIdeaBtn').onclick = () => {
             const a = document.getElementById('memberSelect').value, t = document.getElementById('ideaInput').value.trim();
-            if (a && t) { this.ideas.push({ author: a, text: t, date: new Date().toLocaleString() }); this.save('ideas', this.ideas); render(); }
+            if (a && t) { 
+                this.ideas.push({ author: a, text: t, date: new Date().toLocaleString() }); 
+                this.save('ideas', this.ideas); 
+                document.getElementById('ideaInput').value = '';
+                render(); 
+            }
         };
-        window.dashboard = { delM: (i) => { this.members.splice(i, 1); this.save('members', this.members); render(); } };
+        window.dashboard = { 
+            delM: (i) => { this.members.splice(i, 1); this.save('members', this.members); render(); },
+            delI: (i) => { if(confirm('Delete this idea?')) { this.ideas.splice(i, 1); this.save('ideas', this.ideas); render(); } }
+        };
         render();
     }
 
