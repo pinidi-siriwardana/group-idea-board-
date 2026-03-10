@@ -170,16 +170,39 @@
 
                 <!-- Section: Timer -->
                 <section id="timer">
-                    <div class="card" style="max-width: 600px; margin: 0 auto; text-align: center;">
-                        <h2 class="card-title">⏳ Study Focus Session</h2>
-                        <div class="timer-container">
-                            <div class="timer-circle" id="timerCircle">
-                                <div class="timer-display" id="timerDisplay">25:00</div>
-                                <div class="timer-status" id="timerStatus">Ready</div>
+                    <div class="card" style="max-width: 700px; margin: 0 auto; text-align: center; border: none; background: transparent; box-shadow: none;">
+                        <h2 class="card-title" style="justify-content: center; margin-bottom: 2rem;">Focus Chronometer</h2>
+                        <div class="timer-container" id="timerStage">
+                            <div class="timer-circle-wrap">
+                                <svg class="progress-ring" width="300" height="300">
+                                    <circle
+                                        class="progress-ring__circle"
+                                        stroke="rgba(0,0,0,0.05)"
+                                        stroke-width="10"
+                                        fill="transparent"
+                                        r="135"
+                                        cx="150"
+                                        cy="150"/>
+                                    <circle
+                                        id="timerProgress"
+                                        class="progress-ring__circle"
+                                        stroke="var(--primary-maroon)"
+                                        stroke-width="10"
+                                        stroke-dasharray="848.23"
+                                        stroke-dashoffset="0"
+                                        fill="transparent"
+                                        r="135"
+                                        cx="150"
+                                        cy="150"/>
+                                </svg>
+                                <div class="timer-display-wrap">
+                                    <div class="timer-display" id="timerDisplay">25:00</div>
+                                    <div class="timer-status" id="timerStatus">Ready</div>
+                                </div>
                             </div>
                             <div class="timer-controls">
-                                <button id="startTimerBtn" class="btn btn-primary">Start Session</button>
-                                <button id="resetTimerBtn" class="btn btn-accent">Reset</button>
+                                <button id="startTimerBtn" class="btn btn-primary btn-timer">Start Session</button>
+                                <button id="resetTimerBtn" class="btn btn-accent btn-timer">Reset</button>
                             </div>
                         </div>
                     </div>

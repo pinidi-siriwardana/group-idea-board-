@@ -133,23 +133,70 @@ class DashboardController {
     }
 
     initTimer() {
-        const display = document.getElementById('timerDisplay'), startBtn = document.getElementById('startTimerBtn'), status = document.getElementById('timerStatus');
-        let timeLeft = 25 * 60, timerId = null, isRunning = false;
+        const display = document.getElementById('timerDisplay');
+        const startBtn = document.getElementById('startTimerBtn');
+        const status = document.getElementById('timerStatus');
+        const stage = document.getElementById('timerStage');
+        const progressCircle = document.getElementById('timerProgress');
+        
+        const circumference = 2 * Math.PI * 135; // 2 * pi * r
+        const totalSeconds = 25 * 60;
+        let timeLeft = totalSeconds;
+        let timerId = null;
+        let isRunning = false;
+
+        const setProgress = (percent) => {
+            const offset = circumference - (percent / 100 * circumference);
+            progressCircle.style.strokeDashoffset = offset;
+        };
+
         const update = () => {
             const m = Math.floor(timeLeft / 60), s = timeLeft % 60;
             display.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            const percent = ((totalSeconds - timeLeft) / totalSeconds) * 100;
+            setProgress(percent);
         };
+
         startBtn.onclick = () => {
-            if (isRunning) { clearInterval(timerId); isRunning = false; startBtn.textContent = "Resume Session"; status.textContent = "Paused"; }
-            else {
-                isRunning = true; startBtn.textContent = "Pause Session"; status.textContent = "Focusing...";
+            if (isRunning) {
+                clearInterval(timerId);
+                isRunning = false;
+                startBtn.textContent = "Resume Session";
+                status.textContent = "Paused";
+                stage.classList.remove('timer-active');
+            } else {
+                isRunning = true;
+                startBtn.textContent = "Pause Session";
+                status.textContent = "Focusing...";
+                stage.classList.add('timer-active');
                 timerId = setInterval(() => {
-                    timeLeft--; update();
-                    if (timeLeft <= 0) { clearInterval(timerId); isRunning = false; alert("Focus Complete!"); startBtn.textContent = "Start Session"; }
+                    timeLeft--;
+                    update();
+                    if (timeLeft <= 0) {
+                        clearInterval(timerId);
+                        isRunning = false;
+                        stage.classList.remove('timer-active');
+                        alert("Focus Complete!");
+                        startBtn.textContent = "Start Session";
+                        timeLeft = totalSeconds;
+                        update();
+                    }
                 }, 1000);
             }
         };
-        document.getElementById('resetTimerBtn').onclick = () => { clearInterval(timerId); timeLeft = 25 * 60; isRunning = false; update(); startBtn.textContent = "Start Session"; status.textContent = "Ready"; };
+
+        document.getElementById('resetTimerBtn').onclick = () => {
+            clearInterval(timerId);
+            timeLeft = totalSeconds;
+            isRunning = false;
+            update();
+            startBtn.textContent = "Start Session";
+            status.textContent = "Ready";
+            stage.classList.remove('timer-active');
+        };
+        
+        // Initial setup
+        setProgress(0);
     }
 
     initIdeaBoard() {
