@@ -84,9 +84,9 @@ class DashboardController {
                         <option value="1.0">D</option><option value="0.0">F</option>
                     </select>
                 </td>
-                <td><button class="remove-row" style="background:none; border:none; color: #E53E3E; cursor:pointer; font-size:1.2rem;">&times;</button></td>
+                <td><button class="remove-row-btn" title="Remove row">&times;</button></td>
             `;
-            tr.querySelector('.remove-row').onclick = () => { if (gpaBody.rows.length > 1) tr.remove(); };
+            tr.querySelector('.remove-row-btn').onclick = () => { if (gpaBody.rows.length > 1) tr.remove(); };
             return tr;
         };
 
@@ -128,7 +128,7 @@ class DashboardController {
             else resultDiv.innerHTML = `📈 You need a GPA of <strong>${requiredGpa.toFixed(2)}</strong> in remaining ${remainingCredits} credits to reach ${targetGpa.toFixed(2)}.`;
         };
 
-        gpaBody.querySelector('.remove-row').onclick = (e) => { if (gpaBody.rows.length > 1) e.target.closest('tr').remove(); };
+        gpaBody.querySelector('.remove-row-btn').onclick = (e) => { if (gpaBody.rows.length > 1) e.target.closest('tr').remove(); };
     }
 
     updateGpaUI(gpa) {
@@ -273,13 +273,17 @@ class DashboardController {
                 mList.innerHTML = ''; s.innerHTML = '<option value="" disabled selected>Select Author</option>';
                 this.members.forEach((m, i) => {
                     const li = document.createElement('li');
+                    li.className = 'flex-center gap-1 mb-1';
+                    
                     const nameSpan = document.createElement('span');
+                    nameSpan.className = 'text-sm font-semibold';
                     nameSpan.textContent = m;
                     li.appendChild(nameSpan);
                     
                     const delBtn = document.createElement('button');
+                    delBtn.className = 'remove-row-btn';
                     delBtn.innerHTML = '&times;';
-                    delBtn.style = "color:#ff4444; background:none; border:none; cursor:pointer; margin-left: 8px;";
+                    delBtn.title = "Remove Member";
                     delBtn.onclick = () => window.dashboard.delM(i);
                     li.appendChild(delBtn);
                     
@@ -310,10 +314,10 @@ class DashboardController {
                                 <div class="author-avatar">${initial}</div>
                                 <h4 class="author-name"></h4>
                             </div>
-                            <button class="del-idea-btn" title="Remove Idea">&times;</button>
+                            <button class="remove-row-btn" title="Remove Idea">&times;</button>
                         `;
                         header.querySelector('.author-name').textContent = id.author;
-                        header.querySelector('.del-idea-btn').onclick = () => window.dashboard.delI(id.originalIndex);
+                        header.querySelector('.remove-row-btn').onclick = () => window.dashboard.delI(id.originalIndex);
                         
                         const p = document.createElement('p');
                         p.textContent = id.text;
