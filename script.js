@@ -236,14 +236,9 @@ class DashboardController {
     initIdeaBoard() {
         this.members = this.load('members') || []; this.ideas = this.load('ideas') || [];
         
-        const sanitize = (str) => {
-            if (!str) return '';
-            return str.replace(/<[^>]*>?/gm, '');
-        };
-
-        const debounceButton = (btn) => {
+        const debounceButton = (btn, duration = 300) => {
             btn.disabled = true;
-            setTimeout(() => btn.disabled = false, 300);
+            setTimeout(() => btn.disabled = false, duration);
         };
 
         const render = (filterTerm = '') => {
@@ -320,8 +315,7 @@ class DashboardController {
         const addMemberBtn = document.getElementById('addMemberBtn');
         addMemberBtn.onclick = () => {
             debounceButton(addMemberBtn);
-            const rawV = document.getElementById('newMemberInput').value.trim();
-            const v = sanitize(rawV);
+            const v = document.getElementById('newMemberInput').value.trim();
             
             if (!v) {
                 alert("Please enter a valid name or registration number.");
@@ -339,23 +333,25 @@ class DashboardController {
 
         const submitIdeaBtn = document.getElementById('submitIdeaBtn');
         submitIdeaBtn.onclick = () => {
-            debounceButton(submitIdeaBtn);
             const a = document.getElementById('memberSelect').value;
-            const rawT = document.getElementById('ideaInput').value.trim();
-            const t = sanitize(rawT);
+            const t = document.getElementById('ideaInput').value.trim();
 
             if (!a) {
                 alert("Please select an author.");
                 return;
             }
-            if (!t) {
-                alert("Please enter your idea.");
+            if (t.length === 0) {
+                alert("Input is empty. Please enter your idea.");
+                return;
+            }
+            if (t.length > 250) {
+                alert(`Idea exceeds 250 characters (Current length: ${t.length}). Please shorten it.`);
                 return;
             }
             
             const isDuplicate = this.ideas.some(idea => idea.text.toLowerCase() === t.toLowerCase());
             if (isDuplicate) {
-                alert("This idea has already been proposed.");
+                alert("This idea has already been proposed (case-insensitive check).");
                 return;
             }
 
@@ -363,10 +359,12 @@ class DashboardController {
             this.save('ideas', this.ideas); 
             document.getElementById('ideaInput').value = '';
             render(); 
+            debounceButton(submitIdeaBtn, 800);
+            this.syncDashboardStats();
         };
         window.dashboard = { 
             delM: (i) => { this.members.splice(i, 1); this.save('members', this.members); render(); },
-            delI: (i) => { if(confirm('Delete this idea?')) { this.ideas.splice(i, 1); this.save('ideas', this.ideas); render(); } }
+            delI: (i) => { if(confirm('Delete this idea?')) { this.ideas.splice(i, 1); this.save('ideas', this.ideas); render(); this.syncDashboardStats(); } }
         };
         render();
     }
