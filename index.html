@@ -41,13 +41,22 @@
 
         <!-- Main Content Area -->
         <div class="main-area">
+            <!-- Mobile Overlay -->
+            <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
             <!-- Navbar -->
             <nav class="navbar">
-                <div class="nav-links">
-                    <a href="#" class="nav-link active" data-target="home">Dashboard Home</a>
-                    <a href="#" class="nav-link" data-target="gpa">GPA Calculator</a>
-                    <a href="#" class="nav-link" data-target="timer">Study Timer</a>
-                    <a href="#" class="nav-link" data-target="ideas">Idea Board</a>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button id="menuToggle" class="menu-toggle" aria-label="Toggle Menu">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                    <div class="nav-links">
+                        <a href="#" class="nav-link active" data-target="home">Dashboard Home</a>
+                        <a href="#" class="nav-link" data-target="calendar" id="mobileCalendarLink">Calendar</a>
+                        <a href="#" class="nav-link" data-target="gpa">GPA Calculator</a>
+                        <a href="#" class="nav-link" data-target="timer">Study Timer</a>
+                        <a href="#" class="nav-link" data-target="ideas">Idea Board</a>
+                    </div>
                 </div>
 
                 <div class="theme-switch-wrapper">
@@ -134,6 +143,28 @@
                     </div>
                 </section>
 
+                <!-- Section: Calendar (Mobile Only) -->
+                <section id="calendar">
+                    <div class="card">
+                        <h2 class="card-title">📅 Academic Calendar</h2>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Stay updated with the latest academic events and deadlines.</p>
+                        <ul class="event-list">
+                            <li class="event-item">
+                                <h4>Semester Examinations</h4>
+                                <p>March 15 • Reid Avenue Labs</p>
+                            </li>
+                            <li class="event-item">
+                                <h4>ICTer Conference 2026</h4>
+                                <p>April 02-04 • Main Hall</p>
+                            </li>
+                            <li class="event-item">
+                                <h4>Research Symposium</h4>
+                                <p>May 10 • Post Graduate Center</p>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
                 <!-- Section: GPA Calculator (ADVANCED) -->
                 <section id="gpa">
                     <div class="gpa-layout">
@@ -142,37 +173,39 @@
                             <h2 class="card-title">📊 UCSC GPA Calculator</h2>
                             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Enter your semester results below to analyze your academic standing.</p>
                             
-                            <table class="gpa-table" id="gpaTable">
-                                <thead>
-                                    <tr>
-                                        <th>Course Module</th>
-                                        <th>Credits</th>
-                                        <th>Grade</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="gpaBody">
-                                    <tr>
-                                        <td><input type="text" placeholder="e.g. SCS 1201" class="course-name"></td>
-                                        <td><input type="number" placeholder="3" class="course-credits"></td>
-                                        <td>
-                                            <select class="course-grade">
-                                                <option value="4.0">A / A+</option>
-                                                <option value="3.7">A-</option>
-                                                <option value="3.3">B+</option>
-                                                <option value="3.0">B</option>
-                                                <option value="2.7">B-</option>
-                                                <option value="2.3">C+</option>
-                                                <option value="2.0">C</option>
-                                                <option value="1.5">C-</option>
-                                                <option value="1.0">D</option>
-                                                <option value="0.0">F</option>
-                                            </select>
-                                        </td>
-                                        <td><button class="remove-row" style="background:none; border:none; color: #E53E3E; cursor:pointer; font-size:1.2rem;">&times;</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="gpa-table" id="gpaTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Course Module</th>
+                                            <th>Credits</th>
+                                            <th>Grade</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gpaBody">
+                                        <tr>
+                                            <td><input type="text" placeholder="e.g. SCS 1201" class="course-name"></td>
+                                            <td><input type="number" placeholder="3" class="course-credits"></td>
+                                            <td>
+                                                <select class="course-grade">
+                                                    <option value="4.0">A / A+</option>
+                                                    <option value="3.7">A-</option>
+                                                    <option value="3.3">B+</option>
+                                                    <option value="3.0">B</option>
+                                                    <option value="2.7">B-</option>
+                                                    <option value="2.3">C+</option>
+                                                    <option value="2.0">C</option>
+                                                    <option value="1.5">C-</option>
+                                                    <option value="1.0">D</option>
+                                                    <option value="0.0">F</option>
+                                                </select>
+                                            </td>
+                                            <td><button class="remove-row" style="background:none; border:none; color: #E53E3E; cursor:pointer; font-size:1.2rem;">&times;</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div style="display: flex; gap: 10px;">
                                 <button id="addRowBtn" class="btn btn-accent">Add Module</button>
                                 <button id="calculateGpaBtn" class="btn btn-primary">Analyze Performance</button>

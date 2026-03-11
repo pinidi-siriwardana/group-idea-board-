@@ -30,8 +30,17 @@ class DashboardController {
     }
 
     initNavigation() {
-        const navLinks = document.querySelectorAll('.nav-link');
+        const navLinks = document.querySelectorAll('.nav-links .nav-link');
         const sections = document.querySelectorAll('section');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const menuToggle = document.getElementById('menuToggle');
+
+        const closeSidebar = () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        };
+
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -39,8 +48,20 @@ class DashboardController {
                 navLinks.forEach(l => l.classList.remove('active'));
                 link.classList.add('active');
                 sections.forEach(s => s.classList.toggle('active', s.id === targetId));
+                closeSidebar();
             });
         });
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
     }
 
     initGPACalculator() {
