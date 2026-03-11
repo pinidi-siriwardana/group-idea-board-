@@ -235,13 +235,33 @@ class DashboardController {
 
     initIdeaBoard() {
         this.members = this.load('members') || []; this.ideas = this.load('ideas') || [];
+        
+        const sanitize = (str) => {
+            if (!str) return '';
+            return str.replace(/<[^>]*>?/gm, '');
+        };
+
+        const debounceButton = (btn) => {
+            btn.disabled = true;
+            setTimeout(() => btn.disabled = false, 300);
+        };
+
         const render = (filterTerm = '') => {
             const mList = document.getElementById('memberList'), s = document.getElementById('memberSelect');
             if (mList && s) {
                 mList.innerHTML = ''; s.innerHTML = '<option value="" disabled selected>Select Author</option>';
                 this.members.forEach((m, i) => {
                     const li = document.createElement('li');
-                    li.innerHTML = `<span>${m}</span> <button onclick="window.dashboard.delM(${i})" style="color:#ff4444; background:none; border:none; cursor:pointer;">&times;</button>`;
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = m;
+                    li.appendChild(nameSpan);
+                    
+                    const delBtn = document.createElement('button');
+                    delBtn.innerHTML = '&times;';
+                    delBtn.style = "color:#ff4444; background:none; border:none; cursor:pointer; margin-left: 8px;";
+                    delBtn.onclick = () => window.dashboard.delM(i);
+                    li.appendChild(delBtn);
+                    
                     mList.appendChild(li);
                     const opt = document.createElement('option'); opt.value = m; opt.textContent = m; s.appendChild(opt);
                 });
@@ -262,20 +282,30 @@ class DashboardController {
                     filtered.slice().reverse().forEach(id => {
                         const initial = id.author.charAt(0).toUpperCase();
                         const div = document.createElement('div'); div.className = 'idea-item';
-                        div.innerHTML = `
-                            <div class="idea-header">
-                                <div class="author-meta">
-                                    <div class="author-avatar">${initial}</div>
-                                    <h4>${id.author}</h4>
-                                </div>
-                                <button onclick="window.dashboard.delI(${id.originalIndex})" class="del-idea-btn" title="Remove Idea">&times;</button>
+                        
+                        const header = document.createElement('div'); header.className = 'idea-header';
+                        header.innerHTML = `
+                            <div class="author-meta">
+                                <div class="author-avatar">${initial}</div>
+                                <h4 class="author-name"></h4>
                             </div>
-                            <p>${id.text}</p>
-                            <div class="idea-footer">
-                                <span class="idea-tag">💡 Proposal</span>
-                                <small>${id.date}</small>
-                            </div>
+                            <button class="del-idea-btn" title="Remove Idea">&times;</button>
                         `;
+                        header.querySelector('.author-name').textContent = id.author;
+                        header.querySelector('.del-idea-btn').onclick = () => window.dashboard.delI(id.originalIndex);
+                        
+                        const p = document.createElement('p');
+                        p.textContent = id.text;
+                        
+                        const footer = document.createElement('div'); footer.className = 'idea-footer';
+                        footer.innerHTML = `
+                            <span class="idea-tag">💡 Proposal</span>
+                            <small>${id.date}</small>
+                        `;
+                        
+                        div.appendChild(header);
+                        div.appendChild(p);
+                        div.appendChild(footer);
                         feed.appendChild(div);
                     });
                 }
@@ -287,18 +317,52 @@ class DashboardController {
             filterInput.addEventListener('input', (e) => render(e.target.value.trim()));
         }
 
-        document.getElementById('addMemberBtn').onclick = () => {
-            const v = document.getElementById('newMemberInput').value.trim();
-            if (v && !this.members.includes(v)) { this.members.push(v); this.save('members', this.members); render(); }
-        };
-        document.getElementById('submitIdeaBtn').onclick = () => {
-            const a = document.getElementById('memberSelect').value, t = document.getElementById('ideaInput').value.trim();
-            if (a && t) { 
-                this.ideas.push({ author: a, text: t, date: new Date().toLocaleString() }); 
-                this.save('ideas', this.ideas); 
-                document.getElementById('ideaInput').value = '';
-                render(); 
+        const addMemberBtn = document.getElementById('addMemberBtn');
+        addMemberBtn.onclick = () => {
+            debounceButton(addMemberBtn);
+            const rawV = document.getElementById('newMemberInput').value.trim();
+            const v = sanitize(rawV);
+            
+            if (!v) {
+                alert("Please enter a valid name or registration number.");
+                return;
             }
+            if (!this.members.includes(v)) { 
+                this.members.push(v); 
+                this.save('members', this.members); 
+                document.getElementById('newMemberInput').value = '';
+                render(); 
+            } else {
+                alert("Member already exists.");
+            }
+        };
+
+        const submitIdeaBtn = document.getElementById('submitIdeaBtn');
+        submitIdeaBtn.onclick = () => {
+            debounceButton(submitIdeaBtn);
+            const a = document.getElementById('memberSelect').value;
+            const rawT = document.getElementById('ideaInput').value.trim();
+            const t = sanitize(rawT);
+
+            if (!a) {
+                alert("Please select an author.");
+                return;
+            }
+            if (!t) {
+                alert("Please enter your idea.");
+                return;
+            }
+            
+            const isDuplicate = this.ideas.some(idea => idea.text.toLowerCase() === t.toLowerCase());
+            if (isDuplicate) {
+                alert("This idea has already been proposed.");
+                return;
+            }
+
+            this.ideas.push({ author: a, text: t, date: new Date().toLocaleString() }); 
+            this.save('ideas', this.ideas); 
+            document.getElementById('ideaInput').value = '';
+            render(); 
         };
         window.dashboard = { 
             delM: (i) => { this.members.splice(i, 1); this.save('members', this.members); render(); },
