@@ -353,9 +353,14 @@ class DashboardController {
                 return;
             }
             
-            const isDuplicate = this.ideas.some(idea => idea.text.toLowerCase() === t.toLowerCase());
+            // Advanced Duplicate Detection: Normalize by removing all non-alphanumeric characters and converting to lowercase
+            const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const normalizedNew = normalize(t);
+            
+            const isDuplicate = this.ideas.some(idea => normalize(idea.text) === normalizedNew);
+            
             if (isDuplicate) {
-                alert("This idea has already been proposed.");
+                alert("This idea (or a very similar one) has already been proposed.");
                 return;
             }
 
